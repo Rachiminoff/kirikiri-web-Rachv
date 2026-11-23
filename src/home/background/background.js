@@ -26,7 +26,7 @@ let Background = props => {
     if (props.match.params.route) return route
     const choices = ["fate", "ubw", "hf"]
     return choices[Math.floor(Math.random() * choices.length)]
-  }, [props.match.params.route])
+  }, [props.match.params.route, route])
 
   return <>
     <div className="home-background replaceable-image">
