@@ -1,0 +1,314 @@
+/* The route bar: the current route (a plate that opens a list of the three), day chips, and a key.  Each route has
+   an accent colour that is reused by the day boxes and the lines, so you always know which route you are looking at. */
+
+.routebar {
+  --accent:   #f0d060;
+  --glass:    rgba(4, 10, 28, 0.82);
+
+  position:        sticky;
+  top:             0;
+  z-index:         4;
+  box-sizing:      border-box;
+  width:           min(100%, 62em);
+  margin:          0 auto 0.6em;
+  padding:         0.55em 0.6em 0.4em;
+  padding-top:     calc(0.55em + env(safe-area-inset-top, 0px));
+
+  background:      var(--glass);
+  border-bottom:   1px solid rgba(170, 200, 245, 0.18);
+  border-radius:   0 0 0.7em 0.7em;
+  box-shadow:      0 0.5em 1.2em rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color:           #d3def2;
+}
+
+.routebar[data-route=fate] { --accent: #f0d060; }
+.routebar[data-route=ubw]  { --accent: #ef5a68; }
+.routebar[data-route=hf]   { --accent: #c277e6; }
+
+.routebar-row {
+  display:     flex;
+  align-items: center;
+  gap:         0.7em;
+}
+
+/* the route you are on: one compact plate that opens a short list, instead of three plates side by side */
+.route-select {
+  position: relative;
+  flex:     none;
+}
+
+.route-current,
+.route-option {
+  --cut:   0.5em;
+  --route: var(--accent);
+
+  position:       relative;
+  isolation:      isolate;
+  display:        flex;
+  align-items:    baseline;
+  gap:            0.6em;
+  box-sizing:     border-box;
+  min-height:     2.4em;
+  padding:        0.4em 1em;
+
+  font:           inherit;
+  text-align:     left;
+  letter-spacing: 0.04em;
+  color:          #eef4ff;
+  background:     linear-gradient(135deg, #fff, var(--route) 50%, #fff);
+  border:         0;
+  clip-path:      polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  cursor:         pointer;
+}
+
+.route-current::before,
+.route-option::before {
+  content:    '';
+  position:   absolute;
+  top:        1px;
+  left:       1px;
+  right:      1px;
+  bottom:     1px;
+  z-index:    -1;
+  background: linear-gradient(to bottom, rgba(26, 52, 112, 0.97), rgba(8, 20, 54, 0.98));
+  clip-path:  polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+
+.route-current {
+  align-items: center;
+  text-shadow: 0 0 0.7em var(--route);
+}
+
+.route-current small,
+.route-option small {
+  font-size:      0.7em;
+  letter-spacing: 0.1em;
+  opacity:        0.75;
+}
+
+.route-chevron {
+  flex:       none;
+  transition: transform 0.15s;
+}
+
+.route-current[aria-expanded=true] .route-chevron {
+  transform: rotate(180deg);
+}
+
+.route-name-short {
+  display: none;
+}
+
+.route-list {
+  position:   absolute;
+  top:        calc(100% + 0.35em);
+  left:       0;
+  z-index:    5;
+  min-width:  100%;
+  margin:     0;
+  padding:    0.3em;
+  list-style: none;
+  display:    flex;
+  flex-direction: column;
+  gap:        0.3em;
+
+  background:    rgba(4, 10, 28, 0.96);
+  border:        1px solid rgba(170, 200, 245, 0.25);
+  border-radius: 0.5em;
+  box-shadow:    0 0.6em 1.4em rgba(0, 0, 0, 0.6);
+}
+
+.route-option {
+  width:      100%;
+  color:      #aebfdc;
+  background: linear-gradient(135deg, rgba(170, 200, 245, 0.5), rgba(70, 100, 165, 0.3) 50%, rgba(170, 200, 245, 0.5));
+  white-space: nowrap;
+}
+
+.route-option::before {
+  background: linear-gradient(to bottom, rgba(12, 30, 74, 0.95), rgba(5, 13, 36, 0.97));
+}
+
+.route-option[data-route=fate] { --route: #f0d060; }
+.route-option[data-route=ubw]  { --route: #ef5a68; }
+.route-option[data-route=hf]   { --route: #c277e6; }
+
+.route-option:hover,
+.route-option:focus-visible,
+.route-option[aria-selected=true] {
+  color:      #fff;
+  background: linear-gradient(135deg, #fff, var(--route) 50%, #fff);
+  outline:    none;
+}
+
+.route-current:focus-visible {
+  outline:        2px solid #8fd8ff;
+  outline-offset: 2px;
+}
+
+/* ---- day chips ---- */
+
+.routebar-days {
+  display:         flex;
+  flex:            1;
+  min-width:       0;
+  gap:             0.4em;
+  padding-bottom:  0.1em;
+  overflow-x:      auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.routebar-days::-webkit-scrollbar {
+  display: none;
+}
+
+.day-chip {
+  flex:           none;
+  padding:        0.3em 0.85em;
+  font:           inherit;
+  font-size:      0.82em;
+  letter-spacing: 0.06em;
+  white-space:    nowrap;
+  color:          #b9c9e6;
+  background:     rgba(255, 255, 255, 0.04);
+  border:         1px solid rgba(170, 200, 245, 0.28);
+  border-radius:  999px;
+  cursor:         pointer;
+  transition:     color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.day-chip:hover,
+.day-chip:focus-visible {
+  color:        #fff;
+  border-color: var(--accent);
+  background:   rgba(255, 255, 255, 0.09);
+  outline:      none;
+}
+
+/* ---- key ---- */
+
+.routebar-key {
+  display:        flex;
+  flex-wrap:      wrap;
+  align-items:    center;
+  gap:            0.2em 1.1em;
+  margin-top:     0.4em;
+  font-size:      0.72em;
+  letter-spacing: 0.05em;
+  color:          #8fa3c6;
+}
+
+.key-item {
+  display:     inline-flex;
+  align-items: center;
+  gap:         0.5em;
+}
+
+.key-item::before {
+  content: '';
+  display: inline-block;
+  width:   1.6em;
+  height:  0.7em;
+}
+
+.key-scene::before {
+  background: linear-gradient(135deg, rgba(220, 232, 255, 0.85), rgba(90, 120, 185, 0.55));
+  clip-path:  polygon(0.25em 0, 100% 0, 100% 70%, calc(100% - 0.25em) 100%, 0 100%, 0 0.25em);
+}
+
+.key-h::before {
+  background: linear-gradient(135deg, rgba(255, 190, 240, 0.85), rgba(150, 70, 140, 0.6));
+  clip-path:  polygon(0.25em 0, 100% 0, 100% 70%, calc(100% - 0.25em) 100%, 0 100%, 0 0.25em);
+}
+
+.key-read::before {
+  width:      0.4em;
+  height:     0.4em;
+  margin:     0 0.6em;
+  background: #5cc4ff;
+  transform:  rotate(45deg);
+}
+
+.key-next::before {
+  height:     0;
+  border-top: 2px solid #5cc4ff;
+  box-shadow: 0 0 0.4em #5cc4ff;
+}
+
+.key-prev::before {
+  height:     0;
+  border-top: 2px solid #ffcf7a;
+  box-shadow: 0 0 0.4em #ffcf7a;
+}
+
+.key-hint {
+  margin-left: auto;
+  font-style:  italic;
+}
+
+/* touch screens have no "pointing at", so don't mention it */
+@media (pointer: coarse) {
+  .key-hint {
+    display: none;
+  }
+}
+
+/* narrow: use the short route names */
+@media (max-width: 560px) {
+  .route-name-full {
+    display: none;
+  }
+
+  .route-name-short {
+    display: inline;
+  }
+}
+
+/* short landscape screens: the bar must not eat the screen -- one row of plates, nothing else */
+@media (max-height: 520px) {
+  .routebar {
+    padding:      0.3em 0.5em;
+    padding-top:  calc(0.3em + env(safe-area-inset-top, 0px));
+    padding-left:  calc(0.5em + env(safe-area-inset-left, 0px));
+    padding-right: calc(0.5em + env(safe-area-inset-right, 0px));
+  }
+
+  .route-current {
+    min-height: 2em;
+    padding:    0.2em 0.7em;
+  }
+
+  .route-current small,
+  .routebar-key {
+    display: none;
+  }
+
+  .day-chip {
+    padding: 0.2em 0.7em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-chevron,
+  .day-chip {
+    transition: none;
+  }
+}
+
+/* Keep horizontal route navigation scrollable and show the shared custom scrollbar. */
+.routebar-days { scrollbar-width: thin; scrollbar-color: rgba(143,216,255,.62) rgba(5,18,43,.72); }
+.routebar-days::-webkit-scrollbar { display: block; height: 6px; }
+.routebar-days::-webkit-scrollbar-track { background: rgba(5,18,43,.72); border-radius: 8px; }
+.routebar-days::-webkit-scrollbar-thumb { background: rgba(143,216,255,.6); border-radius: 8px; }
+
+@media (max-width: 700px) {
+  .routebar { width: 100%; margin-bottom: .45rem; padding-left: max(.65rem, env(safe-area-inset-left, 0px)); padding-right: max(.65rem, env(safe-area-inset-right, 0px)); border-radius: 0; }
+  .routebar-row { gap: .4rem; }
+  .route-current { min-height: 44px; padding: .45rem .7rem; }
+  .routebar-days { gap: .3rem; padding-bottom: .35rem; }
+  .day-chip { min-height: 38px; padding: .4rem .7rem; }
+  .routebar-key { gap: .25rem .65rem; font-size: .65rem; }
+}

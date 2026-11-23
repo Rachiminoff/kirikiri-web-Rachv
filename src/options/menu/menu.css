@@ -1,0 +1,1002 @@
+/* The menu.  A full-screen night sky with the section list on the left and the settings for the chosen section on
+   the right, laid out like the console Fate/stay night menu: pale thin type, cyan for "you are here", and the
+   command-seal red kept for the diamond marks only. */
+
+.menu {
+  --sky:      #03102e;
+  --line:     rgba(170, 200, 245, 0.2);
+  --text:     #dbe6fa;
+  --muted:    #8fa3c6;
+  --cyan:     #8fd8ff;
+  --seal:     #c23b4a;
+
+  position:       fixed;
+  top:            0;
+  right:          0;
+  bottom:         0;
+  left:           0;
+  z-index:        5;
+
+  display:        grid;
+  grid-template-columns: minmax(11em, 24%) 1fr;
+  grid-template-rows:    1fr auto;
+  box-sizing:     border-box;
+  overflow:       hidden;
+
+  color:          var(--text);
+  text-shadow:    none;
+  background:
+    radial-gradient(1.2px 1.2px at 8% 18%, rgba(255, 255, 255, 0.9) 50%, transparent 52%),
+    radial-gradient(1px 1px at 17% 71%, rgba(255, 255, 255, 0.6) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 26% 38%, rgba(190, 225, 255, 0.85) 50%, transparent 52%),
+    radial-gradient(1px 1px at 33% 88%, rgba(255, 255, 255, 0.55) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 41% 12%, rgba(255, 255, 255, 0.8) 50%, transparent 52%),
+    radial-gradient(1px 1px at 49% 55%, rgba(190, 225, 255, 0.5) 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 57% 27%, rgba(255, 255, 255, 0.9) 50%, transparent 52%),
+    radial-gradient(1px 1px at 63% 79%, rgba(255, 255, 255, 0.6) 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 72% 44%, rgba(190, 225, 255, 0.8) 50%, transparent 52%),
+    radial-gradient(1px 1px at 78% 9%, rgba(255, 255, 255, 0.7) 50%, transparent 52%),
+    radial-gradient(1.4px 1.4px at 86% 63%, rgba(255, 255, 255, 0.85) 50%, transparent 52%),
+    radial-gradient(1px 1px at 92% 31%, rgba(255, 255, 255, 0.55) 50%, transparent 52%),
+    radial-gradient(1px 1px at 96% 90%, rgba(190, 225, 255, 0.6) 50%, transparent 52%),
+    radial-gradient(1px 1px at 4% 52%, rgba(255, 255, 255, 0.5) 50%, transparent 52%),
+    radial-gradient(ellipse 60% 70% at 78% 18%, rgba(32, 92, 210, 0.5), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 6% 100%, rgba(20, 60, 150, 0.45), transparent 70%),
+    linear-gradient(165deg, #04143a 0%, var(--sky) 55%, #020919 100%);
+
+  opacity:        1;
+  transition:     opacity ease 0.2s;
+}
+
+.menu[invisible] {
+  opacity:        0;
+  transition:     opacity ease 0.2s, visibility 0s 0.2s;
+  visibility:     hidden;
+  pointer-events: none;
+}
+
+/* the magic circle, big and faint behind the settings */
+.menu-circle {
+  position:       absolute;
+  right:          -8vmin;
+  bottom:         -14vmin;
+  width:          84vmin;
+  height:         84vmin;
+  color:          rgba(120, 190, 255, 0.2);
+  pointer-events: none;
+}
+
+/* ---- left: title + sections ---- */
+
+.menu-nav {
+  position:       relative;
+  display:        flex;
+  flex-direction: column;
+  min-height:     0;
+  padding:        calc(var(--vh, 1vh) * 7) 0 calc(var(--vh, 1vh) * 4) 6vw;
+}
+
+.menu-nav h2 {
+  position:       relative;
+  margin:         0 0 0.9em;
+  padding-bottom: 0.35em;
+  font-family:    var(--fate-display, Georgia, serif);
+  font-size:      2.5em;
+  font-weight:    400;
+  letter-spacing: 0.14em;
+  color:          #fff;
+  text-shadow:    0 0 0.6em rgba(100, 185, 255, 0.55);
+}
+
+/* the rule under the title runs off the left edge of the screen and tapers to the right */
+.menu-nav h2::after {
+  content:    '';
+  position:   absolute;
+  left:       -6vw;
+  right:      0;
+  bottom:     0;
+  height:     1px;
+  background: linear-gradient(to right, rgba(190, 220, 255, 0.9), rgba(190, 220, 255, 0.15));
+}
+
+.menu-nav ul {
+  margin:  0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-gap {
+  height: 1.2em;
+}
+
+.menu-item {
+  position:        relative;
+  display:         block;
+  box-sizing:      border-box;
+  width:           100%;
+  padding:         0.5em 0;
+
+  font:            inherit;
+  font-size:       1.3em;
+  font-weight:     300;
+  letter-spacing:  0.1em;
+  text-align:      left;
+  text-decoration: none;
+  color:           var(--muted);
+  background:      none;
+  border:          0;
+  cursor:          pointer;
+  transition:      color 0.15s, text-shadow 0.15s;
+}
+
+.menu-item:hover {
+  color: var(--text);
+}
+
+.menu-item.is-on {
+  color:       var(--cyan);
+  text-shadow: 0 0 0.7em rgba(90, 190, 255, 0.85);
+}
+
+.menu-item.is-on::before {
+  content:    '';
+  position:   absolute;
+  left:       -1.15em;
+  top:        50%;
+  width:      0.34em;
+  height:     0.34em;
+  background: var(--seal);
+  box-shadow: 0 0 0.55em var(--seal);
+  transform:  translateY(-50%) rotate(45deg);
+}
+
+.menu-item:focus-visible {
+  outline:        1px solid var(--cyan);
+  outline-offset: 0.2em;
+}
+
+/* route buttons: a plate per route, each with its own accent colour on the diamond */
+.menu-routes {
+  --route: #8fd8ff;
+  display:        flex;
+  flex-direction: column;
+  gap:            0.5em;
+  margin-top:     1.6em;
+  padding-right:  1.2em;
+}
+
+.menu-routes-title {
+  margin-bottom:  0.1em;
+  font-size:      0.78em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color:          var(--muted);
+}
+
+.menu-route {
+  --route:        #8fd8ff;
+  --cut:          0.5em;
+  position:       relative;
+  display:        flex;
+  flex-direction: column;
+  align-items:    flex-start;
+  gap:            0.1em;
+  box-sizing:     border-box;
+  min-height:     2.9em;
+  padding:        0.55em 1em 0.55em 1.5em;
+
+  font:           inherit;
+  text-align:     left;
+  color:          var(--text);
+  background:     linear-gradient(135deg, rgba(170, 200, 245, 0.55), rgba(70, 100, 165, 0.35) 50%, rgba(170, 200, 245, 0.55));
+  border:         0;
+  clip-path:      polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  cursor:         pointer;
+  isolation:      isolate;
+  transition:     color 0.15s;
+}
+
+.menu-route[data-route=fate] { --route: #f0d060; }
+.menu-route[data-route=ubw]  { --route: #ef5a68; }
+.menu-route[data-route=hf]   { --route: #c277e6; }
+
+.menu-route::before {
+  content:    '';
+  position:   absolute;
+  top:        1px;
+  left:       1px;
+  right:      1px;
+  bottom:     1px;
+  z-index:    -1;
+  background: linear-gradient(to bottom, rgba(10, 28, 70, 0.97), rgba(4, 12, 34, 0.98));
+  clip-path:  polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  transition: background 0.15s;
+}
+
+.menu-route::after {
+  content:    '';
+  position:   absolute;
+  left:       0.7em;
+  top:        50%;
+  width:      0.34em;
+  height:     0.34em;
+  background: var(--route);
+  box-shadow: 0 0 0.55em var(--route);
+  transform:  translateY(-50%) rotate(45deg);
+}
+
+.menu-route-name {
+  font-size:      1em;
+  letter-spacing: 0.05em;
+}
+
+.menu-route small {
+  color:          var(--muted);
+  font-size:      0.74em;
+  letter-spacing: 0.08em;
+}
+
+.menu-route:hover,
+.menu-route:focus-visible,
+.menu-route.is-here {
+  color:   #fff;
+  outline: none;
+}
+
+.menu-route:hover::before,
+.menu-route:focus-visible::before,
+.menu-route.is-here::before {
+  background: linear-gradient(to bottom, rgba(24, 62, 140, 0.97), rgba(8, 22, 62, 0.98));
+}
+
+.menu-route.is-here {
+  background: linear-gradient(135deg, #fff, var(--route) 50%, #fff);
+}
+
+.menu-back {
+  margin-top: auto;
+  font-size:  1em;
+  width:      auto;
+  align-self: flex-start;
+}
+
+.menu-back::after {
+  content: ' «';
+}
+
+/* ---- right: the chosen section ---- */
+
+.menu-page {
+  position:       relative;
+  display:        flex;
+  flex-direction: column;
+  min-width:      0;
+  min-height:     0;
+  padding:        calc(var(--vh, 1vh) * 7) 6vw calc(var(--vh, 1vh) * 2) 1vw;
+}
+
+.menu-page-head {
+  flex:          none;
+  max-width:     44em;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu-count {
+  display:       block;
+  font-size:     1.55em;
+  font-weight:   300;
+  letter-spacing: 0.06em;
+  color:         #fff;
+}
+
+.menu-page-head h3 {
+  margin:         0.15em 0 0;
+  font-size:      1.15em;
+  font-weight:    300;
+  letter-spacing: 0.08em;
+  color:          var(--cyan);
+}
+
+.menu-body {
+  flex:       1 1 auto;
+  min-height: 0;
+  max-width:  44em;
+  overflow-y: auto;
+  padding:    0.4em 0.4em 1em 0;
+  animation:  menu-page-in 0.18s ease-out;
+}
+
+@keyframes menu-page-in {
+  from { opacity: 0; transform: translateX(0.6em); }
+  to   { opacity: 1; transform: none; }
+}
+
+.menu-row {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             0.75em 1.5em;
+  flex-wrap:       wrap;
+  padding:         0.95em 0;
+  border-bottom:   1px solid rgba(170, 200, 245, 0.1);
+}
+
+.menu-label {
+  display:        flex;
+  flex-direction: column;
+  min-width:      7em;
+  font-size:      1em;
+  letter-spacing: 0.04em;
+}
+
+.menu-label small {
+  margin-top: 0.2em;
+  color:      var(--muted);
+  font-size:  0.78em;
+  letter-spacing: 0.02em;
+}
+
+/* slider rows: label and value on one line, track underneath */
+.menu-row-slider .menu-label {
+  display:               grid;
+  grid-template-columns: 1fr auto;
+  align-items:           center;
+  row-gap:               0.7em;
+  width:                 100%;
+  cursor:                pointer;
+}
+
+.menu-row-slider output {
+  color:                var(--cyan);
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-row-slider .slider {
+  grid-column: 1 / -1;
+}
+
+/* choices: plain words, the chosen one lit cyan with a glowing rule under it */
+.seg {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       0.3em 1.6em;
+}
+
+.seg-item {
+  position: relative;
+  cursor:   pointer;
+}
+
+.seg-item input {
+  position: absolute;
+  opacity:  0;
+  top:      0;
+  left:     0;
+  width:    100%;
+  height:   100%;
+  margin:   0;
+  cursor:   pointer;
+}
+
+.seg-item span {
+  position:       relative;
+  display:        block;
+  padding:        0.2em 0.1em;
+  color:          var(--muted);
+  letter-spacing: 0.05em;
+  white-space:    nowrap;
+  transition:     color 0.15s, text-shadow 0.15s;
+}
+
+.seg-item span::after {
+  content:    '';
+  position:   absolute;
+  left:       0;
+  right:      0;
+  bottom:     0;
+  height:     1px;
+  background: var(--cyan);
+  box-shadow: 0 0 0.5em rgba(90, 190, 255, 0.9);
+  transform:  scaleX(0);
+  transition: transform 0.18s ease-out;
+}
+
+.seg-item:hover span {
+  color: var(--text);
+}
+
+.seg-item.is-on span {
+  color:       var(--cyan);
+  text-shadow: 0 0 0.7em rgba(90, 190, 255, 0.7);
+}
+
+.seg-item.is-on span::after {
+  transform: scaleX(1);
+}
+
+.seg-item input:focus-visible + span {
+  outline:        1px solid var(--cyan);
+  outline-offset: 0.2em;
+}
+
+/* range slider: --fill (set inline) paints the elapsed part of the track; the thumb is a diamond */
+.slider {
+  -webkit-appearance: none;
+  appearance:         none;
+  width:              100%;
+  height:             2px;
+  margin:             0.5em 0;
+  background:         linear-gradient(to right, var(--cyan) var(--fill, 50%), rgba(170, 200, 245, 0.25) var(--fill, 50%));
+  outline:            none;
+  cursor:             pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance:         none;
+  width:              0.95em;
+  height:             0.95em;
+  border:             0;
+  background:         #fff;
+  clip-path:          polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  filter:             drop-shadow(0 0 0.3em var(--cyan));
+  cursor:             pointer;
+}
+
+.slider::-moz-range-thumb {
+  width:      0.95em;
+  height:     0.95em;
+  border:     0;
+  border-radius: 0;
+  background: #fff;
+  clip-path:  polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  cursor:     pointer;
+}
+
+.slider:focus-visible::-webkit-slider-thumb {
+  background: var(--cyan);
+}
+
+.slider:focus-visible::-moz-range-thumb {
+  background: var(--cyan);
+}
+
+.menu-note {
+  margin:    1.1em 0 0.25em;
+  color:     var(--muted);
+  font-size: 0.8em;
+}
+
+/* ---- bottom: button hints ---- */
+
+.menu-hints {
+  grid-column: 1 / -1;
+  display:     flex;
+  align-items: center;
+  gap:         2.2em;
+  padding:     0.7em 6vw;
+  font-size:   0.85em;
+  color:       var(--muted);
+  letter-spacing: 0.04em;
+  border-top:  1px solid var(--line);
+  background:  rgba(2, 8, 26, 0.62);
+}
+
+.menu-hints button {
+  padding:    0.2em 0;
+  font:       inherit;
+  color:      inherit;
+  background: none;
+  border:     0;
+  cursor:     pointer;
+}
+
+.menu-hints button:hover,
+.menu-hints button:focus-visible {
+  color:   var(--cyan);
+  outline: none;
+}
+
+.menu-done {
+  margin-left: auto;
+  color:       var(--text);
+}
+
+.menu-hints kbd {
+  display:        inline-block;
+  min-width:      1.5em;
+  box-sizing:     border-box;
+  margin-right:   0.3em;
+  padding:        0 0.55em;
+  font:           inherit;
+  font-size:      0.9em;
+  line-height:    1.6;
+  text-align:     center;
+  color:          var(--text);
+  border:         1px solid rgba(190, 215, 255, 0.55);
+  border-radius:  999px;
+}
+
+/* ---- narrow screens: the section list becomes a row of tabs across the top ---- */
+
+@media (max-width: 700px) {
+  .menu {
+    grid-template-columns: 1fr;
+    grid-template-rows:    auto 1fr auto;
+  }
+
+  .menu-nav {
+    flex-direction: row;
+    flex-wrap:      wrap;
+    align-items:    baseline;
+    gap:            0 1.4em;
+    padding:        1.4em 1.2em 0;
+  }
+
+  .menu-nav h2 {
+    flex:          1 0 100%;
+    margin-bottom: 0.4em;
+    font-size:     1.8em;
+  }
+
+  .menu-nav h2::after {
+    left: -1.2em;
+  }
+
+  .menu-nav ul {
+    display: flex;
+    gap:     0 1.4em;
+  }
+
+  .menu-gap,
+  .menu-back {
+    display: none;
+  }
+
+  .menu-item {
+    font-size:   1.05em;
+    padding:     0.6em 0;
+    white-space: nowrap;
+  }
+
+  .menu-item.is-on::before {
+    left:      50%;
+    top:       auto;
+    bottom:    0;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .menu-page {
+    padding: 0.6em 1.2em 0;
+  }
+
+  .menu-hints {
+    padding: 0.5em 1.2em;
+  }
+}
+
+@media (max-width: 700px) {
+  .menu-routes {
+    flex:           1 0 100%;
+    flex-direction: row;
+    flex-wrap:      wrap;
+    align-items:    stretch;
+    margin-top:     0.6em;
+    padding-right:  1.2em;
+  }
+
+  .menu-routes-title {
+    flex: 1 0 100%;
+  }
+
+  .menu-route {
+    flex: 1 1 8em;
+  }
+}
+
+/* landscape phones: everything has to fit in ~360px of height, so tighten the left column and scroll if still needed */
+@media (max-height: 520px) and (min-width: 701px) {
+  .menu-nav {
+    padding:    3vh 0 2vh calc(4vw + env(safe-area-inset-left, 0px));
+    overflow-y: auto;
+  }
+
+  .menu-nav h2 {
+    margin-bottom: 0.5em;
+    font-size:     1.7em;
+  }
+
+  .menu-item {
+    padding:   0.35em 0;
+    font-size: 1.1em;
+  }
+
+  .menu-routes {
+    gap:        0.35em;
+    margin-top: 0.8em;
+  }
+
+  .menu-route {
+    min-height: 2.5em;
+    padding-top:    0.35em;
+    padding-bottom: 0.35em;
+  }
+
+  .menu-route small {
+    display: none;
+  }
+
+  .menu-page {
+    padding: 3vh calc(4vw + env(safe-area-inset-right, 0px)) 1vh 1vw;
+  }
+
+  .menu-row {
+    padding: 0.6em 0;
+  }
+
+  .menu-hints {
+    padding: 0.35em calc(4vw + env(safe-area-inset-right, 0px)) calc(0.35em + env(safe-area-inset-bottom, 0px)) calc(4vw + env(safe-area-inset-left, 0px));
+  }
+}
+
+/* notches */
+.menu-hints {
+  padding-bottom: calc(0.7em + env(safe-area-inset-bottom, 0px));
+}
+
+@media (pointer: coarse) {
+  .seg-item span {
+    padding: 0.45em 0.2em;
+  }
+
+  .slider::-webkit-slider-thumb {
+    width:  1.3em;
+    height: 1.3em;
+  }
+
+  .slider::-moz-range-thumb {
+    width:  1.3em;
+    height: 1.3em;
+  }
+
+  .menu-hint-keys {
+    display: none;
+  }
+
+  .menu-hints kbd {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .seg-item span,
+  .seg-item span::after,
+  .menu-item {
+    transition: none;
+  }
+
+  .menu-body {
+    animation: none;
+  }
+}
+
+/* Custom reading controls and progression management */
+.menu-select {
+  min-width: 10em;
+  max-width: 100%;
+  padding: 0.55em 2em 0.55em 0.7em;
+  border: 1px solid rgba(143, 216, 255, 0.35);
+  border-radius: 2px;
+  color: var(--text);
+  background: rgba(4, 17, 45, 0.9);
+  font: inherit;
+}
+.menu-select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.menu-subtitle {
+  margin: 1.5em 0 0.25em;
+  padding-bottom: 0.45em;
+  color: var(--cyan);
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.78em;
+}
+.menu-progress-summary { margin: 1em 0 1.4em; color: var(--muted); }
+.menu-progress-summary strong { color: #fff; font-size: 2em; font-weight: 300; margin-right: 0.25em; }
+.menu-progress-route { margin: 1em 0 1.2em; }
+.menu-progress-route > div:first-child { display: flex; justify-content: space-between; gap: 1em; }
+.menu-progress-route b { color: var(--cyan); font-variant-numeric: tabular-nums; }
+.menu-progress-route small, .menu-slot small { display: block; margin-top: 0.35em; color: var(--muted); }
+.menu-progress-track { height: 4px; margin-top: 0.45em; background: rgba(170, 200, 245, 0.15); overflow: hidden; }
+.menu-progress-track i { display: block; height: 100%; background: linear-gradient(to right, #4d8edb, var(--cyan)); }
+.menu-slot { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: 0.7em 0; border-bottom: 1px solid rgba(170, 200, 245, 0.1); }
+.menu-slot-actions, .menu-save-actions { display: flex; flex-wrap: wrap; gap: 0.45em; }
+.menu-slot-actions button, .menu-save-actions button {
+  border: 1px solid rgba(143, 216, 255, 0.35);
+  padding: 0.45em 0.7em;
+  color: var(--text);
+  background: rgba(10, 35, 80, 0.65);
+  font: inherit;
+  cursor: pointer;
+}
+.menu-slot-actions button:hover, .menu-save-actions button:hover { border-color: var(--cyan); color: #fff; }
+.menu-slot-actions button:disabled { opacity: 0.35; cursor: not-allowed; }
+.menu-save-actions { margin-top: 1.2em; }
+.menu-save-message { color: var(--cyan); font-size: 0.85em; }
+
+@media (max-width: 700px) {
+  .menu-nav h2 { font-size: 1.55em; }
+  .menu-page { padding-left: 0.8em; padding-right: 0.8em; }
+  .menu-slot { align-items: flex-start; flex-direction: column; }
+  .menu-slot-actions { width: 100%; }
+  .menu-slot-actions button { flex: 1; }
+  .menu-select { min-width: 8em; }
+}
+
+/* ---- refined menu presentation: clean first view, scroll only when content truly overflows ---- */
+.menu-nav,
+.menu-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: contain;
+}
+
+.menu-nav::-webkit-scrollbar,
+.menu-body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.menu-nav {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: clamp(1.5rem, 7vh, 4.5rem);
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+}
+
+.menu-page {
+  padding-top: clamp(1.5rem, 7vh, 4.5rem);
+  padding-bottom: 1.25rem;
+}
+
+.menu-page-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  max-width: 48em;
+  padding-bottom: 0.85rem;
+}
+
+.menu-count {
+  flex: none;
+  min-width: 2.2em;
+  font-size: 1.15em;
+  color: rgba(143, 216, 255, 0.62);
+}
+
+.menu-page-head h3 {
+  font-size: 1.3em;
+  letter-spacing: 0.12em;
+}
+
+.menu-body {
+  max-width: 48em;
+  padding: 0.6rem 0.8rem 1.5rem 0;
+  scrollbar-gutter: auto;
+}
+
+.menu-row {
+  padding: 0.8em 0;
+}
+
+.menu-item {
+  padding-top: 0.42em;
+  padding-bottom: 0.42em;
+  font-size: 1.15em;
+}
+
+.menu-routes {
+  margin-top: 1.25em;
+  gap: 0.4em;
+}
+
+.menu-route {
+  min-height: 2.65em;
+  padding-top: 0.45em;
+  padding-bottom: 0.45em;
+}
+
+.menu-hints {
+  min-height: 3.2rem;
+  box-sizing: border-box;
+  padding-top: 0.55rem;
+  padding-bottom: max(0.55rem, env(safe-area-inset-bottom, 0px));
+  backdrop-filter: blur(12px);
+}
+
+.menu button:focus-visible,
+.menu select:focus-visible,
+.menu input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .menu {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .menu-nav {
+    display: block;
+    overflow: visible;
+    padding: max(0.85rem, env(safe-area-inset-top, 0px)) 1rem 0.35rem;
+  }
+
+  .menu-nav h2 {
+    margin: 0 0 0.35rem;
+    padding-bottom: 0.45rem;
+    font-size: 1.55rem;
+  }
+
+  .menu-nav ul {
+    display: flex;
+    gap: 0.35rem 1.15rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .menu-nav ul::-webkit-scrollbar { display: none; }
+
+  .menu-item {
+    padding: 0.5rem 0.1rem;
+    font-size: 0.94rem;
+  }
+
+  .menu-routes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+    margin: 0.25rem 0 0;
+    padding: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .menu-routes::-webkit-scrollbar { display: none; }
+  .menu-routes-title { display: none; }
+
+  .menu-route {
+    flex: 0 0 auto;
+    min-height: 2.2rem;
+    padding: 0.35rem 0.7rem 0.35rem 1.25rem;
+  }
+
+  .menu-route-name { font-size: 0.82rem; }
+  .menu-route small { display: none; }
+
+  .menu-page {
+    min-height: 0;
+    padding: 0.55rem 1rem 0;
+  }
+
+  .menu-page-head {
+    gap: 0.65rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .menu-page-head h3 { font-size: 1.05rem; }
+  .menu-count { font-size: 0.95rem; }
+
+  .menu-body {
+    min-height: 0;
+    padding: 0.25rem 0.1rem 1rem 0;
+  }
+
+  .menu-row { gap: 0.5rem 1rem; padding: 0.65rem 0; }
+  .menu-label { min-width: 6.5em; }
+  .menu-hints { min-height: 2.7rem; padding-left: 1rem; padding-right: 1rem; }
+}
+
+@media (max-height: 620px) {
+  .menu-nav { padding-top: 1rem; padding-bottom: 0.6rem; }
+  .menu-nav h2 { margin-bottom: 0.45em; font-size: 1.8em; }
+  .menu-item { padding-top: 0.3em; padding-bottom: 0.3em; }
+  .menu-routes { margin-top: 0.7em; gap: 0.3em; }
+  .menu-route { min-height: 2.25em; padding-top: 0.3em; padding-bottom: 0.3em; }
+  .menu-page { padding-top: 1rem; }
+  .menu-row { padding-top: 0.55em; padding-bottom: 0.55em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-page-head,
+  .menu-route,
+  .menu-item { transition: none; }
+}
+
+/* Layout hardening: keep controls in their own lanes instead of letting them collide. */
+.menu-nav, .menu-page, .menu-body, .menu-hints { min-width: 0; }
+.menu-nav, .menu-body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143,216,255,.62) rgba(5,18,43,.7);
+}
+.menu-nav::-webkit-scrollbar, .menu-body::-webkit-scrollbar { display: block; width: 8px; height: 8px; }
+.menu-nav::-webkit-scrollbar-thumb, .menu-body::-webkit-scrollbar-thumb { background: rgba(143,216,255,.58); border: 2px solid rgba(5,18,43,.8); border-radius: 8px; }
+.menu-row { align-items: flex-start; }
+.menu-row > :last-child { min-width: min(12rem, 100%); max-width: 100%; }
+.menu-select { width: min(18rem, 100%); min-width: 0; box-sizing: border-box; }
+.menu-slot { align-items: flex-start; flex-wrap: wrap; }
+.menu-slot > div:first-child { flex: 1 1 9rem; min-width: 0; overflow-wrap: anywhere; }
+.menu-slot-actions { flex: 1 1 13rem; min-width: 0; justify-content: flex-end; }
+.menu-slot-actions button, .menu-save-actions button { flex: 1 1 auto; min-width: 4.5rem; min-height: 2.5rem; white-space: normal; overflow-wrap: anywhere; }
+.menu-save-actions { display: flex; flex-wrap: wrap; }
+.menu-hints { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; }
+.menu-hints button { flex: 0 1 auto; min-width: 0; }
+.menu-hint-keys { flex: 0 1 auto; }
+.menu-progress-route > div:first-child { flex-wrap: wrap; }
+
+@media (max-width: 700px) {
+  .menu { grid-template-rows: auto minmax(0, 1fr) auto; }
+  .menu-nav { display: flex; flex-direction: column; align-items: stretch; gap: .25rem; overflow: hidden; }
+  .menu-nav ul { max-width: 100%; min-width: 0; padding: 0 0 .2rem; scrollbar-width: thin; }
+  .menu-nav ul::-webkit-scrollbar, .menu-routes::-webkit-scrollbar { display: block; height: 5px; }
+  .menu-nav ul::-webkit-scrollbar-thumb, .menu-routes::-webkit-scrollbar-thumb { background: rgba(143,216,255,.55); border-radius: 8px; }
+  .menu-nav > .menu-item { align-self: flex-start; margin-top: .15rem; }
+  .menu-routes { max-width: 100%; min-width: 0; padding-bottom: .2rem; }
+  .menu-route { max-width: 72vw; }
+  .menu-page { min-width: 0; }
+  .menu-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .45rem; }
+  .menu-row > :last-child { width: 100%; min-width: 0; }
+  .menu-select { width: 100%; }
+  .menu-slot { display: grid; grid-template-columns: minmax(0, 1fr); gap: .55rem; }
+  .menu-slot-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .menu-slot-actions button { min-width: 0; padding: .55rem .35rem; }
+  .menu-save-actions button { flex: 1 1 9rem; }
+  .menu-hints { justify-content: space-between; }
+}
+
+@media (max-width: 380px) {
+  .menu-nav { padding-left: .75rem; padding-right: .75rem; }
+  .menu-page { padding-left: .75rem; padding-right: .75rem; }
+  .menu-slot-actions { grid-template-columns: 1fr; }
+  .menu-hints { justify-content: center; }
+  .menu-hints button { flex: 1 1 100%; }
+}
+
+/* Mobile settings: make every tab, segmented option and action comfortably tappable. */
+@media (max-width: 700px) {
+  .menu { height: 100svh; height: calc(var(--vh, 1vh) * 100); grid-template-rows: auto minmax(0, 1fr) auto; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .menu-nav { padding-top: max(.7rem, env(safe-area-inset-top, 0px)); }
+  .menu-nav ul { gap: .2rem .9rem; padding-bottom: .2rem; }
+  .menu-item { min-height: 42px; display: inline-flex; align-items: center; }
+  .menu-routes { padding-bottom: .35rem; }
+  .menu-route { min-height: 46px; flex: 1 1 7rem; }
+  .menu-page { min-height: 0; padding-top: .45rem; }
+  .menu-body { max-height: 100%; overflow-y: auto; padding: .25rem .15rem 1.25rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .menu-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding: .75rem 0; }
+  .menu-label { min-width: 0; }
+  .seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr)); width: 100%; gap: .3rem; }
+  .seg-item { min-width: 0; }
+  .seg-item span { display: flex; min-height: 42px; align-items: center; justify-content: center; padding: .45rem .35rem; text-align: center; white-space: normal; line-height: 1.2; }
+  .menu-select { width: 100%; min-height: 44px; }
+  .menu-row input[type="range"] { width: 100%; min-height: 32px; }
+  .menu-slot { gap: .55rem; }
+  .menu-slot-actions button, .menu-save-actions button { min-height: 44px; }
+  .menu-save-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-hints { min-height: 0; padding: .5rem .8rem max(.55rem, env(safe-area-inset-bottom, 0px)); }
+  .menu-hints button { min-height: 42px; }
+}
+@media (max-width: 380px) {
+  .menu-page-head h3 { font-size: 1.05rem; }
+  .menu-save-actions { grid-template-columns: 1fr; }
+  .menu-routes { gap: .3rem; }
+  .menu-route { flex-basis: 6.2rem; padding-left: 1.1rem; }
+}

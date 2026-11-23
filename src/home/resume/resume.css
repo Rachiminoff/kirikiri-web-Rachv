@@ -1,0 +1,82 @@
+/* The resume plate: one wide slab of night-blue glass with the Fate clipped corners, above the scene list. */
+
+.resume {
+  display:         flex;
+  justify-content: center;
+  margin:          0 auto 1.2em;
+  padding:         0 1em;
+}
+
+.resume-card {
+  --cut:   0.7em;
+  --edge:  linear-gradient(135deg, rgba(220, 232, 255, 0.85), rgba(90, 120, 185, 0.55) 50%, rgba(220, 232, 255, 0.85));
+
+  position:        relative;
+  isolation:       isolate;
+  display:         grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "eyebrow meta" "title title";
+  gap:             0.15em 1.4em;
+  box-sizing:      border-box;
+  width:           min(100%, 34em);
+  padding:         0.7em 1.5em 0.8em;
+
+  color:           #eef4ff;
+  text-decoration: none;
+  background:      var(--edge);
+  clip-path:       polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  transition:      color 0.15s;
+}
+
+.resume-card::before {
+  content:    '';
+  position:   absolute;
+  top:        1px;
+  left:       1px;
+  right:      1px;
+  bottom:     1px;
+  z-index:    -1;
+  background: linear-gradient(to bottom, rgba(14, 36, 86, 0.94), rgba(5, 14, 40, 0.96));
+  clip-path:  polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  transition: background 0.15s;
+}
+
+.resume-card:hover,
+.resume-card:focus-visible {
+  --edge:  linear-gradient(135deg, #fff, #8fd8ff 50%, #fff);
+  outline: none;
+}
+
+.resume-card:hover::before,
+.resume-card:focus-visible::before {
+  background: linear-gradient(to bottom, rgba(26, 66, 150, 0.95), rgba(8, 24, 66, 0.96));
+}
+
+.resume-eyebrow {
+  grid-area:      eyebrow;
+  font-family:    var(--fate-display, serif);
+  font-size:      0.66em;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color:          var(--fate-cyan, #8fd8ff);
+}
+
+.resume-meta {
+  grid-area:      meta;
+  font-size:      0.72em;
+  letter-spacing: 0.05em;
+  color:          #8fa3c6;
+}
+
+.resume-title {
+  grid-area:   title;
+  font-size:   1.05em;
+  line-height: 1.3;
+}
+
+@media (max-width: 700px) {
+  .resume { padding-left: .75rem; padding-right: .75rem; margin-bottom: .8rem; }
+  .resume-card { width: 100%; padding: .8rem 1rem; gap: .25rem .5rem; }
+  .resume-meta { text-align: right; font-size: .68rem; }
+  .resume-title { font-size: .98rem; overflow-wrap: anywhere; }
+}

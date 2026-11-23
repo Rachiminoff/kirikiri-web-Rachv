@@ -1,0 +1,36 @@
+.progress-screen{position:fixed;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;padding:2vh 3vw;background:rgba(1,7,22,.88);color:#e3edff;text-shadow:none;box-sizing:border-box}
+.progress-screen-panel{width:min(760px,100%);max-height:94vh;overflow:auto;padding:clamp(18px,3vw,34px);box-sizing:border-box;border:1px solid rgba(145,196,255,.3);background:radial-gradient(ellipse at 85% 0,rgba(34,94,190,.2),transparent 55%),linear-gradient(150deg,#071b40,#020a1d);box-shadow:0 20px 70px #0009}
+.progress-screen header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #8db8e633;padding-bottom:15px;margin-bottom:18px}.progress-screen header small,.progress-screen-current small{letter-spacing:.18em;color:#91b7e6}.progress-screen h2{font-size:1.8em;font-weight:400;margin:.2em 0}.progress-screen header button{border:0;background:none;color:#dceaff;font-size:2em;cursor:pointer}.progress-screen-current{display:grid;gap:5px;padding:14px 16px;background:#7abaff0d;border-left:2px solid #8fd8ff}.progress-screen-current strong{font-size:1.1em}.progress-screen-current span,.progress-screen-empty,.progress-screen-note{color:#9db1d1;font-size:.88em}.progress-screen-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.progress-screen-stats div{display:flex;align-items:baseline;gap:9px;padding:12px;background:#ffffff08}.progress-screen-stats strong{font-size:1.7em;color:#9cddff}.progress-screen-panel section{margin-top:20px}.progress-screen-panel h3{font-size:.95em;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#a8c7ee;margin:0 0 11px}.progress-screen-route{margin:10px 0}.progress-screen-route>div:first-child{display:flex;justify-content:space-between;gap:10px;font-size:.9em}.progress-screen-route span{color:#9db1d1}.progress-screen-track{height:5px;background:#ffffff16;margin-top:7px}.progress-screen-track i{display:block;height:100%;background:#8fd8ff}.progress-screen-affection{display:flex;flex-wrap:wrap;gap:8px}.progress-screen-affection div{min-width:90px;display:flex;justify-content:space-between;gap:16px;padding:9px 12px;background:#ffffff0b}.progress-screen-affection b{color:#9cddff}.progress-screen-endings{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}.progress-screen-endings li{padding:7px 10px;border:1px solid #83d8ae55;color:#b8e8cd;font-size:.88em}.progress-screen-slots{display:grid;gap:7px}.progress-screen-slots>div{display:flex;align-items:center;gap:7px;padding:9px;background:#ffffff08}.progress-screen-slots span{flex:1;display:grid;gap:3px}.progress-screen-slots small{color:#9db1d1}.progress-screen button{border:1px solid #91b9e655;background:#102b50;color:#dceaff;padding:7px 11px;cursor:pointer}.progress-screen button:disabled{opacity:.35;cursor:default}.progress-screen footer{display:flex;justify-content:flex-end;margin-top:20px}.progress-screen-note{line-height:1.5;margin-top:18px}@media(max-width:560px){.progress-screen{padding:0}.progress-screen-panel{max-height:100vh;height:100%;padding:18px 15px;border:0}.progress-screen-slots>div{flex-wrap:wrap}.progress-screen-slots span{flex-basis:100%}.progress-screen-slots button{flex:1}}
+
+/* Responsive save controls and a consistent custom scrollbar. */
+.progress-screen-panel { scrollbar-width: thin; scrollbar-color: rgba(143,216,255,.65) rgba(5,18,43,.75); }
+.progress-screen-panel::-webkit-scrollbar { width: 8px; height: 8px; }
+.progress-screen-panel::-webkit-scrollbar-track { background: rgba(5,18,43,.75); }
+.progress-screen-panel::-webkit-scrollbar-thumb { background: rgba(143,216,255,.6); border: 2px solid rgba(5,18,43,.8); border-radius: 8px; }
+.progress-screen-slots > div { min-width: 0; flex-wrap: wrap; }
+.progress-screen-slots span { min-width: 8rem; overflow-wrap: anywhere; }
+.progress-screen-slots button { flex: 0 1 auto; min-width: 3.7rem; min-height: 2.4rem; }
+.progress-screen header { gap: 1rem; }
+.progress-screen header > div { min-width: 0; }
+.progress-screen header button { flex: 0 0 auto; }
+@media (max-width: 560px) {
+  .progress-screen-slots > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .progress-screen-slots span { grid-column: 1 / -1; min-width: 0; }
+  .progress-screen-slots button { min-width: 0; padding: .55rem .35rem; }
+}
+
+@media (max-width: 700px) {
+  .progress-screen { position: fixed; inset: 0; z-index: 30; padding: 0; }
+  .progress-screen-panel { width: 100%; max-width: none; height: 100%; max-height: none; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: calc(.9rem + env(safe-area-inset-top, 0px)) max(.9rem, env(safe-area-inset-right, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) max(.9rem, env(safe-area-inset-left, 0px)); }
+  .progress-screen header { align-items: center; gap: .5rem; }
+  .progress-screen h2 { font-size: 1.35rem; }
+  .progress-screen header button { min-width: 44px; min-height: 44px; }
+  .progress-screen-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progress-screen-slots > div { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, auto); gap: .4rem; }
+  .progress-screen-slots span { min-width: 0; }
+  .progress-screen button { min-height: 42px; padding: .5rem .7rem; }
+}
+@media (max-width: 380px) {
+  .progress-screen-slots > div { grid-template-columns: 1fr 1fr; }
+  .progress-screen-slots span { grid-column: 1 / -1; }
+}

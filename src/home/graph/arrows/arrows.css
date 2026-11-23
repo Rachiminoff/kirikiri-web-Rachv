@@ -1,0 +1,74 @@
+/* Connectors: thin curved lines between scenes.  At rest they are quiet; when a scene is hovered / focused, the lines
+   to the scenes that follow it light up cyan, the lines from the scenes that lead to it light up amber, and every
+   other line steps back. */
+
+.graph-arrows-svg {
+  position:       absolute;
+  top:            0;
+  bottom:         0;
+  left:           0;
+  right:          0;
+  pointer-events: none;
+  z-index:        2;
+  opacity:        1;
+  transition:     opacity 0.2s ease-in;
+  overflow:       visible;
+}
+
+.graph-arrows-svg[updating] {
+  opacity:    0;
+  transition: opacity 0.2s ease-out;
+}
+
+.graph-svg-line {
+  fill:            none;
+  stroke:          #9db4d6;
+  stroke-width:    1.5;
+  stroke-linecap:  round;
+  stroke-opacity:  0.42;
+  transition:      stroke-opacity 0.15s;
+}
+
+/* a dark halo under every line keeps it readable over the artwork */
+.graph-svg-line[border] {
+  stroke:         #02071a;
+  stroke-width:   4;
+  stroke-opacity: 0.55;
+}
+
+.graph-svg-line[border][highlight] {
+  stroke-opacity: 0.8;
+}
+
+.graph-svg-line:not([border])[highlight] {
+  stroke-width:   2.5;
+  stroke-opacity: 1;
+}
+
+.graph-svg-line[kind=next] {
+  stroke: #5cc4ff;
+}
+
+.graph-svg-line[kind=prev] {
+  stroke: #ffcf7a;
+}
+
+/* while something is hovered, everything unrelated fades back */
+.graph-arrows-svg[focus] .graph-svg-line:not([highlight]) {
+  stroke-opacity: 0.1;
+}
+
+.graph-head          { fill: #9db4d6; fill-opacity: 0.55; }
+.graph-head-next     { fill: #5cc4ff; }
+.graph-head-prev     { fill: #ffcf7a; }
+
+.graph-arrows-svg[focus] .graph-head {
+  fill-opacity: 0.12;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph-arrows-svg,
+  .graph-svg-line {
+    transition: none;
+  }
+}

@@ -1,0 +1,163 @@
+/* The backlog: a full-height pane of night-blue glass over the picture.  Scene names are small caps with a rule,
+   pages are plain text.  Sits above the reader and below the settings menu's toast. */
+
+.backlog {
+  position:       fixed;
+  top:            0;
+  right:          0;
+  bottom:         0;
+  left:           0;
+  z-index:        6;
+  display:        flex;
+  flex-direction: column;
+  box-sizing:     border-box;
+  padding:        calc(var(--vh, 1vh) * 4 + env(safe-area-inset-top, 0px)) 0 calc(var(--vh, 1vh) * 3 + env(safe-area-inset-bottom, 0px));
+
+  color:          #dbe6fa;
+  text-shadow:    none;
+  background:     linear-gradient(to bottom, rgba(3, 12, 34, 0.93), rgba(2, 8, 24, 0.96));
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation:      backlog-in 0.18s ease-out both;
+}
+
+.backlog-head,
+.backlog-list {
+  box-sizing:  border-box;
+  width:       min(100%, 44em);
+  margin:      0 auto;
+  padding:     0 1.2em;
+}
+
+.backlog-head {
+  flex:           none;
+  display:        flex;
+  align-items:    baseline;
+  gap:            1em;
+  padding-bottom: 0.6em;
+  border-bottom:  1px solid rgba(170, 200, 245, 0.25);
+}
+
+.backlog-head h2 {
+  margin:         0;
+  font-family:    var(--fate-display, serif);
+  font-weight:    normal;
+  font-size:      1.3em;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color:          #fff;
+}
+
+.backlog-hint {
+  margin-right:   auto;
+  font-size:      0.7em;
+  letter-spacing: 0.06em;
+  color:          #8fa3c6;
+}
+
+.backlog-hint kbd {
+  padding:       0 0.4em;
+  border:        1px solid rgba(170, 200, 245, 0.4);
+  border-radius: 0.25em;
+  font:          inherit;
+}
+
+.backlog-close,
+.backlog-clear {
+  font:           inherit;
+  font-size:      0.8em;
+  letter-spacing: 0.08em;
+  color:          #c9d7ee;
+  background:     none;
+  border:         1px solid rgba(170, 200, 245, 0.35);
+  border-radius:  999px;
+  padding:        0.25em 1em;
+  cursor:         pointer;
+  transition:     color 0.15s, border-color 0.15s;
+}
+
+.backlog-clear {
+  border-color: transparent;
+  color:        #8fa3c6;
+}
+
+.backlog-close:hover,
+.backlog-close:focus-visible,
+.backlog-clear:hover,
+.backlog-clear:focus-visible {
+  color:        #fff;
+  border-color: var(--fate-cyan, #8fd8ff);
+  outline:      none;
+}
+
+.backlog-list {
+  flex:                       1;
+  min-height:                 0;
+  overflow-y:                 auto;
+  overscroll-behavior:        contain;
+  -webkit-overflow-scrolling: touch;
+  padding-top:                0.4em;
+  padding-bottom:             1em;
+  outline:                    none;
+}
+
+.backlog-scene {
+  display:        flex;
+  align-items:    center;
+  gap:            0.7em;
+  margin:         1.6em 0 0.5em;
+  font-family:    var(--fate-display, serif);
+  font-size:      0.72em;
+  letter-spacing: 0.14em;
+  color:          var(--fate-cyan, #8fd8ff);
+}
+
+.backlog-scene::before {
+  content:    '';
+  flex:       none;
+  width:      0.4em;
+  height:     0.4em;
+  background: var(--fate-seal, #c23b4a);
+  box-shadow: 0 0 0.5em var(--fate-seal, #c23b4a);
+  transform:  rotate(45deg);
+}
+
+.backlog-scene::after {
+  content:    '';
+  flex:       1;
+  height:     1px;
+  background: linear-gradient(to right, rgba(143, 216, 255, 0.55), transparent);
+}
+
+.backlog-page {
+  margin:      0 0 0.9em;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.backlog-empty {
+  margin-top: 2em;
+  text-align: center;
+  color:      #8fa3c6;
+}
+
+@keyframes backlog-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backlog {
+    animation: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .backlog { padding-top: calc(.65rem + env(safe-area-inset-top, 0px)); padding-bottom: calc(.55rem + env(safe-area-inset-bottom, 0px)); }
+  .backlog-head, .backlog-list { width: 100%; padding-left: max(.85rem, env(safe-area-inset-left, 0px)); padding-right: max(.85rem, env(safe-area-inset-right, 0px)); }
+  .backlog-head { align-items: center; flex-wrap: wrap; gap: .45rem .65rem; }
+  .backlog-head h2 { font-size: 1.05rem; }
+  .backlog-hint { flex-basis: 100%; order: 3; margin: 0; }
+  .backlog-close, .backlog-clear { min-height: 40px; padding: .35rem .8rem; }
+  .backlog-list { -webkit-overflow-scrolling: touch; }
+}

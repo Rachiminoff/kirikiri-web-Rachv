@@ -1,0 +1,80 @@
+.introduction-text {
+  width:       85vw;
+  max-width:   1400px;
+  margin:      0 auto 3em;
+  color:       #d3def2;
+  text-align:  left;
+  line-height: 1.4;
+}
+
+.introduction-text a {
+  color: var(--fate-cyan, lightblue);
+}
+
+@media (pointer: fine) {
+  .introduction-text a:hover {
+    color: #fff;
+  }
+}
+
+.introduction-dropdown {
+  text-align: center;
+}
+
+.introduction-dropdown > div {
+  display:     inline-block;
+  font-size:   larger;
+  user-select: none;
+  cursor:      pointer;
+}
+
+@media (pointer: fine) {
+  .introduction-dropdown > div:hover {
+    color: #fff;
+  }
+}
+
+.introduction-hr {
+  height:           2px;
+  background-image: linear-gradient(to right, rgba(143, 216, 255, 0), rgba(143, 216, 255, 0.55), rgba(143, 216, 255, 0));
+}
+
+.howto-device-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  margin: 0.5em 0 0.8em;
+}
+.howto-device-tabs button {
+  border: 1px solid rgba(143, 216, 255, 0.35);
+  padding: 0.5em 1em;
+  color: #b9cce8;
+  background: rgba(5, 19, 48, 0.75);
+  font: inherit;
+  cursor: pointer;
+}
+.howto-device-tabs button.active,
+.howto-device-tabs button:focus-visible {
+  color: #fff;
+  border-color: var(--fate-cyan, #8fd8ff);
+  box-shadow: 0 0 0.7em rgba(143, 216, 255, 0.2);
+}
+.howto-device-panel {
+  padding: 1em 1.2em;
+  border-left: 2px solid rgba(143, 216, 255, 0.65);
+  background: rgba(8, 24, 55, 0.55);
+}
+.howto-device-panel kbd, .howto-content kbd {
+  border: 1px solid rgba(190, 215, 255, 0.35);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+@media (max-width: 700px) {
+  .introduction-text { width: auto; max-width: none; margin: 0 1rem 2rem; font-size: .96rem; line-height: 1.6; }
+  .howto-device-tabs { position: sticky; top: .25rem; z-index: 3; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem; }
+  .howto-device-tabs button { min-height: 44px; padding: .55rem .4rem; }
+  .howto-device-panel { padding: .85rem; line-height: 1.55; overflow-wrap: anywhere; }
+}

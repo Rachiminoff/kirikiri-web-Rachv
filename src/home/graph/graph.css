@@ -1,0 +1,122 @@
+.graph {
+  position:       relative;
+  padding-top:    0.5em;
+  padding-bottom: calc(var(--vh, 1vh) * 40);
+  color:          #d3def2;
+}
+
+.section-vertical {
+  display:        flex;
+  flex-direction: column;
+}
+
+.section-vertical > :not(.section-day-descriptor) {
+  margin: 0 auto;
+}
+
+.section-vertical > :not(.section-day-descriptor) ~ * {
+  margin-top: 1em;
+}
+
+.section-horizontal {
+  display:         flex;
+  flex-wrap:       nowrap;
+
+  justify-content: left;
+}
+
+.section-vertical > .section-horizontal:not(:first-child) {
+  margin-top: 0.5em;
+}
+
+/* a day: a frosted panel edged in the route's colour, with the day's name as a header */
+.section-day {
+  --accent:    #8fd8ff;
+  --accent-rgb: 143, 216, 255;
+  width:       min(62em, calc(100% - 1em));
+  padding:     0.6em 0.6em 1.1em;
+  box-sizing:  border-box;
+  scroll-margin-top: 9em;
+
+  background:  linear-gradient(to bottom, rgba(6, 14, 40, 0.55), rgba(4, 9, 28, 0.4));
+  border:      1px solid rgba(var(--accent-rgb), 0.35);
+  border-top:  2px solid var(--accent);
+  border-radius: 0.5em;
+  box-shadow:  0 0 0.25em 0 #000000, 0 0 1.1em 0.1em rgba(var(--accent-rgb), 0.22);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.section-day > .section-horizontal {
+  margin: 0 -0.5em;
+}
+
+.section-day[route=プ] { --accent: #6f8cff; --accent-rgb: 111, 140, 255; }
+.section-day[route=セ] { --accent: #f0d060; --accent-rgb: 240, 208, 96; }
+.section-day[route=凛] { --accent: #ef5a68; --accent-rgb: 239, 90, 104; }
+.section-day[route=桜] { --accent: #c277e6; --accent-rgb: 194, 119, 230; }
+
+/* the scene list is one centred column of day panels; the lines between scenes need a little room between them */
+.graph {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+}
+
+.graph > .section-day {
+  margin-bottom: 1.6em;
+}
+
+.section-day .section-horizontal {
+  flex-wrap:       wrap;
+  justify-content: center;
+}
+
+.section-day-descriptor {
+  position:       relative;
+  display:        flex;
+  align-items:    center;
+  gap:            0.6em;
+  margin:         0 0 0.7em;
+  padding:        0 0 0.4em 0.1em;
+  font-family:    var(--fate-display, serif);
+  letter-spacing: 0.14em;
+  font-size:      larger;
+  color:          #fff;
+  opacity:        0.95;
+}
+
+.section-day-descriptor::before {
+  content:    '';
+  flex:       none;
+  width:      0.4em;
+  height:     0.4em;
+  background: var(--accent);
+  box-shadow: 0 0 0.6em var(--accent);
+  transform:  rotate(45deg);
+}
+
+.section-day-descriptor::after {
+  content:    '';
+  position:   absolute;
+  left:       0;
+  right:      0;
+  bottom:     0;
+  height:     1px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  opacity:    0.7;
+}
+
+/* phones: the day panels use the width, scenes get comfortable touch targets */
+@media (max-height: 520px) {
+  .section-day {
+    scroll-margin-top: 4em;
+  }
+}
+
+@media (max-width: 700px) {
+  .graph { padding-top: .25rem; padding-bottom: 5rem; width: 100%; box-sizing: border-box; }
+  .section-day { width: calc(100% - 1rem); padding: .55rem .4rem .8rem; margin-bottom: .9rem; border-radius: .35rem; }
+  .section-day-descriptor { font-size: .95rem; letter-spacing: .08em; }
+  .section-day .section-horizontal { margin-left: -.25rem; margin-right: -.25rem; }
+}

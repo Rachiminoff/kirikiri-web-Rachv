@@ -1,0 +1,512 @@
+/* can we have a fade-out affect with the text, so that it scrolls offscreen before reaching the very top of the page? */
+/*.window {*/
+/*  position:         absolute;*/
+/*  top:              0;*/
+/*  height:           calc(var(--vh, 1vh) * 100);*/
+/*  width:            100vw;*/
+
+/*  background-color: red;*/
+
+/*  mask:             url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAIAAADdv/LVAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAGdYAABnWARjRyu0AAAASSURBVBhXYwCB////M/z//x8AF/QF+xwHbbUAAAAASUVORK5CYII=');*/
+/*  mask-mode:        luminance;*/
+/*  mask-repeat:      no-repeat;*/
+/*  !*mask-size:        cover;*!*/
+/*  mask-position:    center;*/
+/*  overflow:         auto;*/
+/*  mask-size:        100% 100%;*/
+/*}*/
+
+.text-area {
+  width:      100%;
+  max-width:  calc(var(--vh, 1vh) * 133.33333333);
+  margin:     auto;
+  overflow:   hidden;
+  transition: opacity 0.2s ease-out;
+}
+
+.text-area[hide] {
+  opacity: 0.5;
+}
+
+.text {
+  margin:      0 12%;
+
+  color:       white;
+  line-height: 1.4;
+  font-family: var(--reader-font-family, inherit);
+}
+
+.text-shadow {
+  text-shadow: 0 0 0.125em #343837, 0 0 0.125em #343837, 0 0 0.25em #000, 0 0 0.25em #000, 0 0 0.5em #000, 0 0 0.5em #000, 0 0 1em #000, 0 0 1em #000;
+}
+
+.resizable-text {
+  font-size: calc(1em * var(--reader-font-scale, 1));
+  font-family: var(--reader-font-family, inherit);
+}
+
+@media only screen and (min-width: 800px) and (min-height: 600px) {
+  .resizable-text {
+    font-size: calc(1.1em * var(--reader-font-scale, 1));
+  }
+}
+
+@media only screen and (min-width: 1000px) and (min-height: 750px) {
+  .resizable-text {
+    font-size: calc(1.2em * var(--reader-font-scale, 1));
+  }
+}
+
+@media only screen and (min-width: 1200px) and (min-height: 900px) {
+  .resizable-text {
+    font-size: calc(1.3em * var(--reader-font-scale, 1));
+  }
+}
+
+@media only screen and (min-width: 1400px) and (min-height: 1050px) {
+  .resizable-text {
+    font-size: calc(1.4em * var(--reader-font-scale, 1));
+  }
+}
+
+.click-to-start {
+  display:          block;
+  position:         fixed;
+  top:              0;
+  left:             0;
+  right:            0;
+  bottom:           0;
+  background:       radial-gradient(ellipse at 50% 50%, rgba(8, 20, 54, 0.55), rgba(2, 6, 20, 0.88) 80%);
+  transition:       opacity 0.2s ease-out;
+  cursor:           pointer;
+
+  /* push the link-logos down a bit */
+  padding-top:      0.75em;
+}
+
+.click-to-start[hide] {
+  opacity:        0;
+  pointer-events: none;
+}
+
+.click-to-start > div:not(:first-child) {
+  margin:         calc(var(--vh, 1vh) * 50) auto 0;
+  font-size:      100%;
+  text-align:     center;
+  color:          #9db4d6;
+  font-weight:    400;
+  letter-spacing: 0.08em;
+  transform:      translateY(-50%);
+}
+
+/* the headline gets a seal-red diamond rule above and below, like the Fate title cards */
+.click-to-start > div > div {
+  position:       relative;
+  display:        block;
+  width:          max-content;
+  max-width:      100%;
+  box-sizing:     border-box;
+  margin:         0 auto 0.9em;
+  padding:        0.55em 2.2em;
+  font-family:    var(--fate-display);
+  font-size:      200%;
+  font-weight:    400;
+  letter-spacing: 0.22em;
+  color:          #fff;
+  text-shadow:    0 0 0.6em rgba(100, 190, 255, 0.75), 0 0 1.6em rgba(40, 110, 255, 0.5);
+  border-top:     1px solid rgba(190, 215, 255, 0.55);
+  border-bottom:  1px solid rgba(190, 215, 255, 0.55);
+}
+
+.click-to-start > div > div::before,
+.click-to-start > div > div::after {
+  content:    '';
+  position:   absolute;
+  left:       50%;
+  width:      0.38em;
+  height:     0.38em;
+  background: #c23b4a;
+  transform:  translate(-50%, -50%) rotate(45deg);
+}
+
+.click-to-start > div > div::before {
+  top: 0;
+}
+
+.click-to-start > div > div::after {
+  top: 100%;
+}
+
+.click-to-start > div:first-child {
+  display: block;
+}
+
+.click-to-start > div:last-child {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .click-to-start > div:first-child {
+    display: none;
+  }
+
+  .click-to-start > div:last-child {
+    display: block;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
+   VN mode: a fixed text box along the bottom of the 4:3 stage, instead of a scrolling page
+   ------------------------------------------------------------------------------------------------------------------ */
+
+body.vn-mode {
+  overflow: hidden;
+  height:   calc(var(--vh, 1vh) * 100);
+}
+
+.vn-box {
+  position:       fixed;
+  bottom:         0;
+  left:           50%;
+  transform:      translateX(-50%);
+  width:          100%;
+  max-width:      calc(var(--vh, 1vh) * 133.33333333);
+  height:         calc(var(--vh, 1vh) * 30);
+  box-sizing:     border-box;
+  padding:        1.2em 0 0.6em;
+  z-index:        1;
+
+  display:        flex;
+  flex-direction: column;
+
+  /* --vn-alpha comes from the "Text box opacity" setting */
+  background:     linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, calc(var(--vn-alpha, 0.8) * 0.7)) 18%, rgba(0, 0, 0, var(--vn-alpha, 0.8)) 100%);
+  transition:     opacity 0.2s ease-out;
+}
+
+/* narrower than 4:3: the picture is 75vw tall, so the box can sit below it instead of covering it */
+@media (max-aspect-ratio: 4/3) {
+  .vn-box {
+    height:     calc(calc(var(--vh, 1vh) * 100) - 75vw);
+    min-height: calc(var(--vh, 1vh) * 28);
+    max-height: calc(var(--vh, 1vh) * 55);
+  }
+}
+
+.vn-box[hide] {
+  opacity: 0.5;
+}
+
+.vn-scroller {
+  flex:       1 1 auto;
+  min-height: 0;
+  overflow:   hidden;
+}
+
+.vn-box .text {
+  margin: 0 8%;
+}
+
+.vn-section:not([focused]) {
+  display: none;
+}
+
+/* "more to read" marker: a pale-blue double chevron; hidden once the end of the scene is reached.
+   (ADV: sits in the corner of the box.  NVL: the watcher parks it right after the last character on the page.) */
+.vn-next {
+  position:        absolute;
+  right:           4%;
+  bottom:          3.4em;
+  width:           1em;
+  height:          1em;
+  background:      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b4e4ff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5.5l9 7 9-7'/%3E%3Cpath d='M6.5 12l5.5 5 5.5-5' stroke-width='1.8'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter:          drop-shadow(0 0 0.25em rgba(90, 190, 255, 0.95));
+  animation:       vn-bob 1.1s ease-in-out infinite;
+  pointer-events:  none;
+}
+
+.vn-next[hide] {
+  display: none;
+}
+
+@keyframes vn-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(0.25em); }
+}
+
+/* scene choices / "Continue" button, floated over the middle of the picture */
+.vn-choices {
+  position:       fixed;
+  top:            0;
+  left:           50%;
+  transform:      translateX(-50%);
+  width:          100%;
+  max-width:      calc(var(--vh, 1vh) * 133.33333333);
+  bottom:         calc(var(--vh, 1vh) * 30);
+  z-index:        2;
+
+  display:        flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.vn-choices > * {
+  pointer-events: auto;
+}
+
+.vn-choices .choice-block {
+  margin:      0 12%;
+  min-height:  0;
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .vn-choices {
+    bottom: calc(var(--vh, 1vh) * 40);
+  }
+}
+
+/* text stays hidden until the section's picture has loaded; it then fades in */
+.vn-scroller {
+  transition: opacity 0.25s ease-out;
+}
+
+.vn-box[concealed] .vn-scroller {
+  opacity:    0;
+  transition: none;
+}
+
+/* "Hide" button: tuck the text box and choices away to look at the picture */
+.vn-box,
+.vn-choices {
+  transition: opacity 0.2s ease-out;
+}
+
+.vn-box[ui-hidden],
+.vn-choices[ui-hidden] {
+  opacity:        0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
+   NVL mode: no box.  The page of text is laid straight over the picture, top-left, under a deep-blue veil.
+   (Same paging / Auto / Skip machinery as the textbox mode; only the layout differs.)
+   ------------------------------------------------------------------------------------------------------------------ */
+
+.vn-box.nvl {
+  top:            0;
+  bottom:         0;
+  height:         auto;
+  padding:        calc(var(--vh, 1vh) * 8) 5% 0;
+  font-size:      calc(var(--vh, 1vh) * 3.1);
+  line-height:    1.9;
+  background:     none;
+  pointer-events: none;
+}
+
+.vn-box.nvl > * {
+  pointer-events: auto;
+}
+
+/* the veil: a blue-black wash from the top (where the words are) plus a vignette round the edges */
+.vn-box.nvl::before {
+  content:        '';
+  position:       absolute;
+  top:            0;
+  left:           0;
+  right:          0;
+  bottom:         0;
+  z-index:        -1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom,
+      rgba(2, 8, 28, calc(var(--vn-alpha, 0.8) * 0.92)) 0%,
+      rgba(3, 12, 36, calc(var(--vn-alpha, 0.8) * 0.66)) 36%,
+      rgba(3, 12, 36, calc(var(--vn-alpha, 0.8) * 0.24)) 66%,
+      rgba(3, 12, 36, 0) 88%),
+    radial-gradient(ellipse at 50% 58%, rgba(0, 0, 0, 0) 52%, rgba(0, 6, 26, 0.6) 100%);
+  transition:     opacity 0.25s ease-out;
+}
+
+.vn-box.nvl[concealed]::before {
+  opacity:    0;
+  transition: none;
+}
+
+.vn-box.nvl .vn-scroller {
+  flex:       none;
+  max-height: calc(var(--vh, 1vh) * 62);
+}
+
+.vn-box.nvl .text {
+  margin:         0;
+  font-size:      calc(1em * var(--reader-font-scale, 1));
+  font-family:    var(--reader-font-family, inherit);
+  letter-spacing: 0.02em;
+  text-shadow:    0 0 0.18em rgba(0, 8, 30, 0.95), 0 0.06em 0.2em #000, 0 0 0.6em rgba(0, 0, 0, 0.8);
+}
+
+/* narrower than 4:3: type is sized to the width, and the veil runs the full height since text can spill below the picture */
+@media (max-aspect-ratio: 4/3) {
+  .vn-box.nvl {
+    height:      auto;
+    min-height:  0;
+    max-height:  none;
+    padding-top: 4vw;
+    font-size:   4.3vw;
+    line-height: 1.75;
+  }
+
+  .vn-box.nvl::before {
+    background: linear-gradient(to bottom, rgba(2, 8, 28, calc(var(--vn-alpha, 0.8) * 0.9)), rgba(2, 8, 28, calc(var(--vn-alpha, 0.8) * 0.78)));
+  }
+
+  .vn-box.nvl .vn-scroller {
+    max-height: calc(calc(var(--vh, 1vh) * 100) - calc(var(--vh, 1vh) * 16));
+  }
+}
+
+@media (max-height: 480px) and (min-aspect-ratio: 4/3) {
+  .vn-box.nvl {
+    font-size: 15px;
+  }
+}
+
+/* choices sit in the lower half of the picture, under the page of text */
+.vn-choices.nvl {
+  bottom:          0;
+  padding-bottom:  calc(var(--vh, 1vh) * 13);
+  box-sizing:      border-box;
+  justify-content: flex-end;
+  font-size:       calc(var(--vh, 1vh) * 2.7);
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .vn-choices.nvl {
+    bottom:         0;
+    padding-bottom: calc(var(--vh, 1vh) * 14);
+    font-size:      4.2vw;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
+   Loading: while a scene's picture / sound are on their way, a small seal-red diamond pulses in the corner and taps
+   wait for it (instead of skipping ahead of the picture).
+   ------------------------------------------------------------------------------------------------------------------ */
+
+.vn-loading {
+  position:       absolute;
+  right:          calc(3% + env(safe-area-inset-right, 0px));
+  top:            1.2em;
+  width:          0.55em;
+  height:         0.55em;
+  background:     #c23b4a;
+  box-shadow:     0 0 0.8em #c23b4a;
+  transform:      rotate(45deg);
+  animation:      vn-loading-pulse 0.9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.vn-loading[hide] {
+  display: none;
+}
+
+.vn-box.nvl .vn-loading {
+  top:   auto;
+  bottom: calc(var(--vh, 1vh) * 6);
+  right: calc(3% + 0.5em + env(safe-area-inset-right, 0px));
+}
+
+@keyframes vn-loading-pulse {
+  0%, 100% { opacity: 0.35; transform: rotate(45deg) scale(0.8); }
+  50%      { opacity: 1;    transform: rotate(45deg) scale(1.15); }
+}
+
+/* the text is concealed while loading, so show it on the nvl veil too */
+.vn-box[concealed] .vn-loading {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
+   Phones / small screens, held sideways.  The stage is only ~360px tall, so type, controls and the text box are
+   sized in pixels (the vh-based sizes above get too small), and notches are kept clear.
+   ------------------------------------------------------------------------------------------------------------------ */
+
+@media (max-height: 520px) and (min-aspect-ratio: 4/3) {
+  /* textbox mode: a slightly taller, more compact box */
+  .vn-box:not(.nvl) {
+    height:     calc(var(--vh, 1vh) * 38);
+    padding:    0.7em 0 0.3em;
+    font-size:  14px;
+  }
+
+  .vn-box:not(.nvl) .text {
+    margin:      0 calc(4% + env(safe-area-inset-left, 0px)) 0 calc(4% + env(safe-area-inset-right, 0px));
+    line-height: 1.35;
+  }
+
+  /* nvl mode */
+  .vn-box.nvl {
+    padding:     calc(var(--vh, 1vh) * 6) calc(4% + env(safe-area-inset-right, 0px)) 0 calc(4% + env(safe-area-inset-left, 0px));
+    font-size:   clamp(13px, calc(var(--vh, 1vh) * 4.6), 19px);
+    line-height: 1.7;
+  }
+
+  .vn-box.nvl .vn-scroller {
+    max-height: calc(var(--vh, 1vh) * 70);
+  }
+
+  .vn-choices.nvl {
+    padding-bottom: calc(var(--vh, 1vh) * 16);
+    font-size:      clamp(13px, calc(var(--vh, 1vh) * 4.4), 18px);
+  }
+
+  .choice-button {
+    min-height: 2.6em;
+  }
+}
+
+/* any touch screen: tapping text should never select it or flash a highlight */
+@media (pointer: coarse) {
+  .vn-box,
+  .vn-choices {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Mobile-first reader refinements: respect safe areas and keep the text readable above browser chrome. */
+@media (max-width: 700px) {
+  .text-area { max-width: 100%; }
+  .text { margin-left: max(5vw, env(safe-area-inset-left, 0px)); margin-right: max(5vw, env(safe-area-inset-right, 0px)); }
+  .vn-box:not(.nvl) {
+    height: clamp(190px, 36svh, 320px);
+    min-height: 0;
+    max-height: 48svh;
+    padding: .8rem 0 calc(.55rem + env(safe-area-inset-bottom, 0px));
+  }
+  .vn-box:not(.nvl) .text { margin: 0 5vw; line-height: 1.48; }
+  .vn-box.nvl {
+    padding: calc(.8rem + env(safe-area-inset-top, 0px)) max(5vw, env(safe-area-inset-right, 0px)) 0 max(5vw, env(safe-area-inset-left, 0px));
+    font-size: clamp(16px, 4.1vw, 21px);
+    line-height: 1.65;
+  }
+  .vn-box.nvl .vn-scroller { max-height: 66svh; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .vn-choices { bottom: clamp(190px, 36svh, 320px); padding-left: 4vw; padding-right: 4vw; box-sizing: border-box; }
+  .vn-choices .choice-block { margin-left: 0; margin-right: 0; }
+  .vn-choices.nvl { padding: 0 4vw calc(12svh + env(safe-area-inset-bottom, 0px)); }
+  .click-to-start { padding: calc(1rem + env(safe-area-inset-top, 0px)) 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; }
+  .click-to-start > div > div { font-size: clamp(1.35rem, 7vw, 2rem); letter-spacing: .12em; padding: .55em .8em; }
+}
+
+@media (max-width: 380px) {
+  .vn-box:not(.nvl) { height: 40svh; max-height: 46svh; }
+  .vn-choices { bottom: 40svh; }
+  .vn-box:not(.nvl) .text { margin: 0 4vw; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) and (max-width: 900px) {
+  .vn-box:not(.nvl) { height: 39svh; max-height: 43svh; padding-top: .35rem; }
+  .vn-choices { bottom: 39svh; }
+  .vn-box.nvl { padding-top: calc(.45rem + env(safe-area-inset-top, 0px)); font-size: clamp(14px, 2.8vw, 18px); }
+  .vn-box.nvl .vn-scroller { max-height: 72svh; }
+}

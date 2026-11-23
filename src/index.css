@@ -1,0 +1,70 @@
+@font-face {
+  font-family: 'FateLine';
+  src: local('FateLine'), url(./resources/generated/FateLine.ttf) format('truetype');
+}
+
+:root {
+  /* Fate palette: the blue of a Fuyuki night, the silver of a servant's blade, the red of a command seal */
+  --fate-night:   #040a1c;
+  --fate-deep:    #0b2150;
+  --fate-blue:    #1c4a9a;
+  --fate-cyan:    #8fd8ff;
+  --fate-silver:  #c9d7ee;
+  --fate-seal:    #c23b4a;
+  --vh:           1vh; /* replaced at runtime with 1% of the visible height (phones' 100vh includes the browser toolbars) */
+  --fate-display: 'Cinzel', 'Trajan Pro', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}
+
+body {
+  overflow-y:              scroll;
+  position:                relative;
+  margin:                  0;
+  font-family:             FateLine, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                           sans-serif;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color:        #000000;
+  color:                   #bfbfbf;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* phones: no accidental zoom / text selection / pull-to-refresh while reading */
+html[data-mobile] body.vn-mode {
+  touch-action:               manipulation;
+  overscroll-behavior:        none;
+  -webkit-user-select:        none;
+  user-select:                none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout:      none;
+}
+
+/* Consistent Fate-themed scrollbars for every scrollable surface. Scrolling remains native. */
+:root {
+  scrollbar-color: rgba(143, 216, 255, 0.58) rgba(5, 18, 43, 0.72);
+  scrollbar-width: thin;
+}
+* {
+  scrollbar-color: rgba(143, 216, 255, 0.58) rgba(5, 18, 43, 0.72);
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(5, 18, 43, 0.72);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(143, 216, 255, 0.72), rgba(61, 111, 180, 0.78));
+  border: 2px solid rgba(5, 18, 43, 0.82);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #b9eaff, #6fa9e8);
+}
+*::-webkit-scrollbar-corner { background: rgba(5, 18, 43, 0.72); }

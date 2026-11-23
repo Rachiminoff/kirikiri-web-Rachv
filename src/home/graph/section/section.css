@@ -1,0 +1,105 @@
+.graph-section {
+  overflow:   hidden;
+  box-shadow: 0 0 0.5em 0.125em #777777;
+  margin-top: 1em;
+}
+
+/* a scene: a plate of night-blue glass with a silver hairline and the top-left / bottom-right corners clipped,
+   the same cut as the choice buttons. */
+.graph-item {
+  --cut:            0.55em;
+  --edge:           linear-gradient(135deg, rgba(220, 232, 255, 0.85), rgba(90, 120, 185, 0.55) 50%, rgba(220, 232, 255, 0.85));
+
+  position:         relative;
+  isolation:        isolate;
+  display:          inline-block;
+  text-align:       center;
+  padding:          0.55em 0.9em;
+  background:       var(--edge);
+  text-decoration:  inherit;
+  color:            #dbe6fa;
+  letter-spacing:   0.03em;
+  clip-path:        polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  z-index:          2;
+  transition:       color 0.12s;
+
+  margin-top:       0.5em;
+  margin-left:      0.5em;
+  margin-right:     0.5em;
+}
+
+.graph-item::before {
+  content:    '';
+  position:   absolute;
+  top:        1px;
+  left:       1px;
+  right:      1px;
+  bottom:     1px;
+  z-index:    -1;
+  background: linear-gradient(to bottom, rgba(14, 32, 76, 0.96), rgba(6, 15, 40, 0.97));
+  clip-path:  polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  transition: background 0.12s;
+}
+
+.graph-item[h]::before {
+  background: linear-gradient(to bottom, rgba(70, 24, 66, 0.96), rgba(34, 10, 36, 0.97));
+}
+
+.graph-item[hovered] {
+  --edge: linear-gradient(135deg, #fff, #8fd8ff 50%, #fff);
+  color:  #fff;
+}
+
+.graph-item[hovered]::before {
+  background: linear-gradient(to bottom, rgba(28, 70, 150, 0.97), rgba(9, 26, 70, 0.97));
+}
+
+/* scenes connected to the one under the cursor: cyan for those that follow it, amber for those that lead to it
+   (matching the lines) */
+.graph-item[next] {
+  --edge: linear-gradient(135deg, #e8f6ff, #5cc4ff 50%, #e8f6ff);
+}
+
+.graph-item[prev] {
+  --edge: linear-gradient(135deg, #fff4dc, #ffcf7a 50%, #fff4dc);
+}
+
+.graph-item[next]::before,
+.graph-item[prev]::before {
+  background: linear-gradient(to bottom, rgba(18, 44, 104, 0.97), rgba(7, 18, 50, 0.97));
+}
+
+/* scenes already opened carry a small cyan diamond; the one the reader was last on is edged in command-seal red */
+.graph-item[read]::after {
+  content:    '';
+  position:   absolute;
+  top:        0.45em;
+  right:      0.75em;
+  width:      0.32em;
+  height:     0.32em;
+  background: #5cc4ff;
+  opacity:    0.75;
+  transform:  rotate(45deg);
+}
+
+.graph-item[resume]:not([hovered]):not([next]):not([prev]) {
+  --edge: linear-gradient(135deg, #ffe3e6, #c23b4a 50%, #ffe3e6);
+}
+
+.graph-item:focus-visible {
+  --edge: linear-gradient(135deg, #fff, #8fd8ff 50%, #fff);
+  outline: none;
+  color:   #fff;
+}
+
+.graph-item {
+  max-width:  min(26em, 100%);
+  box-sizing: border-box;
+}
+
+@media (pointer: coarse) {
+  .graph-item {
+    padding:    0.8em 1em;
+    min-height: 2.75em;
+  }
+}

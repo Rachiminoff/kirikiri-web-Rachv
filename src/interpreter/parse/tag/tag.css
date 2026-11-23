@@ -1,0 +1,97 @@
+.tag {
+  color: lightsteelblue;
+}
+
+.tag-changed {
+  color: lightgreen;
+}
+
+.tag-original {
+  color: inherit;
+}
+
+.tag-unresolved {
+  color: lightpink;
+}
+
+.tag-extra {
+  color: lightseagreen;
+}
+
+.tag-block-pin {
+  position:  relative; /* just so we can set z-index */
+  z-index:   3;
+
+  height:    0;
+  /* double flipping is a hack to have the elements stack up from the bottom of the container instead of down from the top */
+  transform: scaleY(-1);
+}
+
+.tag-block-size-limiter {
+  overflow:   hidden;
+  margin:     0 -0.5em;
+
+  max-height: 5.5em;
+}
+
+.tag-block-size-limiter:hover {
+  max-height: none;
+}
+
+.tag-block {
+  opacity:          0.3;
+  background-color: rgba(51, 51, 51, 0.8);
+  margin:           0.5em;
+
+  transform:        scaleY(-1);
+}
+
+.tag-block-size-limiter:hover > .tag-block {
+  opacity: 1;
+}
+
+
+.tag-block-inline-pin {
+  display:  inline;
+  position: relative;
+  height:   0;
+  width:    0;
+}
+
+.tag-block-inline-marker {
+  left:        -2px;
+  border-left: 4px solid green;
+}
+
+.tag-block-inline-size-limiter {
+  position:   absolute;
+  top:        0;
+  left:       0;
+
+  overflow:   hidden;
+
+  max-height: 1.4em;
+  z-index:    1;
+}
+
+.tag-block-inline-size-limiter:hover {
+  max-height: none;
+  z-index:    2;
+}
+
+.tag-block-inline {
+  opacity:        0;
+  background:     none;
+  margin-top:     -0.2em;
+  padding-bottom: 0.2em;
+  white-space:    nowrap;
+}
+
+.tag-block-inline-marker .tag-block-inline {
+  opacity:          0.3;
+  background-color: rgba(51, 51, 51, 0.8);
+}
+
+.tag-block-inline-size-limiter:hover > .tag-block-inline {
+  opacity: 1;
+}

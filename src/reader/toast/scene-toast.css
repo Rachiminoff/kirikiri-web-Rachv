@@ -1,0 +1,60 @@
+/* "Scene change": a plate of night-blue glass with the clipped corners used across the Fate UI.  It never takes
+   clicks, so it can't get between the reader and the page. */
+
+.scene-toast {
+  --cut: 0.6em;
+
+  position:       fixed;
+  top:            calc(var(--vh, 1vh) * 3 + env(safe-area-inset-top, 0px));
+  left:           50%;
+  z-index:        7;
+  box-sizing:     border-box;
+  max-width:      min(34em, calc(100vw - 2em));
+  padding:        0.55em 1.5em 0.65em;
+  text-align:     center;
+  pointer-events: none;
+
+  color:          #eef4ff;
+  text-shadow:    none;
+  background:     linear-gradient(to bottom, rgba(14, 36, 86, 0.94), rgba(5, 14, 40, 0.96));
+  border-top:     2px solid var(--fate-cyan, #8fd8ff);
+  box-shadow:     0 0.4em 1.4em rgba(0, 0, 0, 0.55), 0 0 1.4em rgba(60, 150, 255, 0.25);
+  clip-path:      polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+
+  transform:      translate(-50%, 0);
+  animation:      scene-toast-in 0.35s ease-out both, scene-toast-out 0.5s ease-in 3.7s both;
+}
+
+.scene-toast-eyebrow {
+  display:        block;
+  font-family:    var(--fate-display, serif);
+  font-size:      0.62em;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color:          var(--fate-cyan, #8fd8ff);
+  opacity:        0.9;
+}
+
+.scene-toast-title {
+  display:        block;
+  margin-top:     0.15em;
+  font-size:      0.95em;
+  letter-spacing: 0.03em;
+  line-height:    1.3;
+}
+
+@keyframes scene-toast-in {
+  from { opacity: 0; transform: translate(-50%, -0.8em); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes scene-toast-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-toast {
+    animation: scene-toast-out 0.5s ease-in 3.7s both;
+  }
+}
