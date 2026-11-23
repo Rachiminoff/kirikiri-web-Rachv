@@ -1,0 +1,15 @@
+* [33m212dc4a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Update project
+* [33m0b55094[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Updated README.
+* [33m171760e[m Added Japanese text to "next page" buttons.
+* [33mea13b4c[m Added support for "ruby" tags.
+* [33ma68b54f[m Minor tweaks to asset version selection.
+* [33m339d563[m Removed a hacky line-length fix.
+* [33mac530be[m Added basic support for 'ch' tags.
+* [33m6c0dfae[m Changed around how audio works.
+* [33m90704bb[m Changed audio player to re-use audio devices.
+* [33m2fbd247[m Changed saber/rin/sakura route names to fate/ubw/hf.
+* [33m41c8c7d[m Added jp scene names to the main page graph.
+* [33m1a469b7[m Added support for multiple image versions.
+* [33m97b43a7[m Changed FateLine font to use a unicode private use area, starting at \uE000.
+* [33mf95ffc7[m Fixed an issue where audio was not playing.
+* [33m333787f[m Fixed a bug which misplaced wacky & line tags.
