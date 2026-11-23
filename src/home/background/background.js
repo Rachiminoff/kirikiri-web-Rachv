@@ -1,7 +1,6 @@
-import React from "react"
+import React, {useMemo} from "react"
 import {withRouter} from "react-router"
 import {LocateImage} from "../../resources/lookup"
-import Links from "../links/links"
 import "./background.css"
 
 let Background = props => {
@@ -21,6 +20,14 @@ let Background = props => {
       route = "fate"
   }
 
+  const logoRoute = useMemo(() => {
+    // On the landing page, rotate the title mark between the three route identities.
+    // A route-specific URL keeps its matching logo.
+    if (props.match.params.route) return route
+    const choices = ["fate", "ubw", "hf"]
+    return choices[Math.floor(Math.random() * choices.length)]
+  }, [props.match.params.route])
+
   return <>
     <div className="home-background replaceable-image">
       <img src={LocateImage("ta_back_fate")} visible={route === "fate" ? "" : undefined} alt=""/>
@@ -33,11 +40,10 @@ let Background = props => {
     </div>
 
     <div className="top-section">
-      <Links/>
       <div className="title-image replaceable-image">
-        <img src={LocateImage("ta_logo6_fate")} visible={route === "fate" ? "" : undefined} alt=""/>
-        <img src={LocateImage("ta_logo6_ubw")} visible={route === "ubw" ? "" : undefined} alt=""/>
-        <img src={LocateImage("ta_logo6_hf")} visible={route === "hf" ? "" : undefined} alt=""/>
+        <img src={LocateImage("ta_logo6_fate")} visible={logoRoute === "fate" ? "" : undefined} alt="Fate route logo"/>
+        <img src={LocateImage("ta_logo6_ubw")} visible={logoRoute === "ubw" ? "" : undefined} alt="Unlimited Blade Works route logo"/>
+        <img src={LocateImage("ta_logo6_hf")} visible={logoRoute === "hf" ? "" : undefined} alt="Heaven's Feel route logo"/>
 
         {/*<img src={"/static/images/" + "tb_logo6_fate" + ".webp"} visible={route === "fate" ? "" : undefined} alt=""/>*/}
         {/*<img src={"/static/images/" + "tb_logo6_ubw" + ".webp"} visible={route === "ubw" ? "" : undefined} alt=""/>*/}

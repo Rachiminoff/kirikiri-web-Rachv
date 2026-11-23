@@ -243,3 +243,186 @@
     min-height: 36px;
   }
 }
+
+/* Consistent, compact command dock */
+.vn-bar { gap: .35rem; align-items: center; }
+.vn-btn { min-width: 5.2rem; min-height: 42px; justify-content: center; padding: .45rem .65rem; border: 1px solid rgba(143,216,255,.18); border-radius: 3px; background: rgba(3,12,34,.58); opacity: .82; font-size: .76rem; }
+.vn-btn::after { left: 12%; right: 12%; }
+.vn-btn:disabled, .vn-btn[aria-disabled="true"] { opacity: .32; cursor: not-allowed; }
+.vn-btn[aria-pressed="true"] { border-color: rgba(143,216,255,.75); background: rgba(22,65,118,.78); box-shadow: inset 0 0 0 1px rgba(143,216,255,.12), 0 0 12px rgba(90,190,255,.16); }
+.vn-btn[aria-pressed="true"]::before { left: .35rem; }
+.vn-box.nvl .vn-bar { gap: .35rem; }
+.vn-box.nvl .vn-btn { min-width: 4.5rem; min-height: 40px; font-size: max(12px, calc(var(--vh, 1vh) * 1.65)); opacity: .88; }
+@media (max-width: 700px) {
+ .vn-bar { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .35rem; }
+ .vn-bar .vn-btn { min-width: 0; min-height: 46px; }
+ .vn-box.nvl .vn-bar { left: 3%; right: 3%; bottom: calc(var(--vh, 1vh) * 1); grid-template-columns: repeat(3,minmax(0,1fr)); }
+ .vn-box.nvl .vn-btn { min-height: 44px; font-size: 15px; }
+}
+
+.vn-playtime {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.2em;
+  padding: 0 .45rem;
+  color: var(--fate-silver, #c9d7ee);
+  font-size: .68rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .08em;
+  opacity: .68;
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  .vn-playtime { grid-column: 1 / -1; min-height: 1.4rem; padding: .1rem; }
+}
+
+
+/* Global reading dock: live in the unused gutter beside the 4:3 stage on
+   landscape/desktop, and in a dedicated bottom dock on portrait devices.
+   Because Controls is a sibling of the reading layout, this applies to ADV,
+   NVL, and scrolling modes alike. */
+.vn-bar {
+  position: fixed;
+  z-index: 30;
+  top: auto;
+  right: max(12px, calc((100vw - min(100vw, 133.333333vh)) / 2 + 14px));
+  bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  left: auto;
+  width: min(190px, calc((100vw - min(100vw, 133.333333vh)) / 2 - 24px));
+  margin: 0;
+  padding: .35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: .3rem;
+  background: rgba(3, 9, 24, .48);
+  border: 1px solid rgba(143, 216, 255, .13);
+  border-radius: 4px;
+  backdrop-filter: blur(7px);
+}
+.vn-playtime { text-align: center; padding: .25rem .4rem; color: rgba(201,215,238,.68); font-size: .72rem; font-variant-numeric: tabular-nums; }
+.vn-bar .vn-btn { width: 100%; min-height: 40px; justify-content: flex-start; padding: .45rem .7rem; }
+
+@media (max-aspect-ratio: 4/3) {
+  .vn-bar {
+    top: auto;
+    right: max(8px, env(safe-area-inset-right, 0px));
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    left: max(8px, env(safe-area-inset-left, 0px));
+    width: auto;
+    padding: .25rem;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    flex-direction: row;
+    gap: .15rem;
+    background: rgba(3, 9, 24, .84);
+  }
+  .vn-playtime { grid-column: 1 / -1; padding: .1rem; }
+  .vn-bar .vn-btn { min-width: 0; min-height: 42px; padding: .25rem .1rem; justify-content: center; flex-direction: column; gap: .1rem; font-size: 13px; }
+  .vn-bar .vn-btn span { display: block; font-size: 9px; line-height: 1; letter-spacing: 0; }
+  .vn-bar .vn-btn svg { width: 16px; height: 16px; }
+}
+@media (max-width: 360px) and (max-aspect-ratio: 4/3) {
+  .vn-bar { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .vn-playtime { grid-column: 1 / -1; }
+}
+@media (min-aspect-ratio: 4/3) and (max-width: 950px) {
+  .vn-bar { width: 54px; right: max(6px, env(safe-area-inset-right, 0px)); padding: .2rem; }
+  .vn-bar .vn-btn { min-width: 0; min-height: 38px; padding: .2rem 0; justify-content: center; }
+  .vn-bar .vn-btn span { display: none; }
+  .vn-playtime { font-size: 9px; padding: .1rem 0; }
+}
+
+/* Desktop VN dock: keep the actions in the side gutter, outside the 4:3 scene. */
+@media (pointer: fine) and (min-width: 1100px) {
+  body.vn-mode .vn-box.nvl .vn-bar { position: fixed; top: 50%; right: max(1rem, calc((100vw - 133.333vh) / 2 - 4.5rem)); bottom: auto; left: auto; width: 4rem; margin: 0; padding: .4rem; display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: center; gap: .35rem; transform: translateY(-50%); background: rgba(3, 10, 27, .62); border: 1px solid rgba(143,216,255,.14); }
+  body.vn-mode .vn-box.nvl .vn-bar .vn-btn { width: 100%; min-width: 0; min-height: 42px; flex: 0 0 auto; justify-content: center; padding: .25rem; font-size: 14px; }
+  body.vn-mode .vn-box.nvl .vn-bar .vn-btn span { display: none; }
+}
+@media (max-width: 700px) {
+  body.vn-mode .vn-bar { position: static; width: 100%; margin: .25rem auto; padding: .2rem .25rem env(safe-area-inset-bottom); }
+  body.vn-mode .vn-box:not(.nvl) .vn-bar { position: static; }
+}
+
+/* ======================================================================================================
+   FINAL DOCK PLACEMENT (supersedes the placement rules above)
+   The dock lives in the empty side gutter next to the 4:3 stage, so it never covers the artwork or the
+   dialogue.  --gutter is the width of that empty strip on ONE side; the dock is centred inside it.
+   Portrait phones keep the bottom dock (below the picture, where the text box is).
+   ====================================================================================================== */
+@media (min-aspect-ratio: 4/3) {
+  body.vn-mode .vn-bar {
+    --gutter: calc((100vw - min(100vw, 133.333vh)) / 2);
+    --dock-w: 56px;
+    position: fixed;
+    top: 50%;
+    bottom: auto;
+    left: auto;
+    right: max(calc(6px + env(safe-area-inset-right, 0px)), calc((var(--gutter) - var(--dock-w)) / 2));
+    width: var(--dock-w);
+    max-height: calc(var(--vh, 1vh) * 100 - 12px);
+    margin: 0;
+    padding: .3rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: .25rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    transform: translateY(-50%);
+    background: rgba(3, 9, 24, .55);
+    border: 1px solid rgba(143, 216, 255, .16);
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+  }
+  body.vn-mode .vn-bar::-webkit-scrollbar { display: none; }
+  body.vn-mode .vn-bar .vn-btn { width: 100%; min-width: 0; min-height: 40px; padding: .25rem; justify-content: center; font-size: 14px; }
+  body.vn-mode .vn-bar .vn-btn span { display: none; }
+  body.vn-mode .vn-bar .vn-btn::after { left: 18%; right: 18%; }
+  body.vn-mode .vn-bar .vn-btn[aria-pressed="true"]::before { left: .15rem; }
+  body.vn-mode .vn-playtime { grid-column: auto; padding: .2rem 0; font-size: 9px; letter-spacing: .02em; min-height: 0; }
+}
+
+/* roomy gutter (wide window): show the labels too */
+@media (min-aspect-ratio: 9/5) and (min-height: 520px) and (min-width: 1000px) {
+  body.vn-mode .vn-bar { --dock-w: clamp(56px, calc(var(--gutter) - 28px), 176px); padding: .4rem; }
+  body.vn-mode .vn-bar .vn-btn { justify-content: flex-start; gap: .55rem; padding: .35rem .65rem; font-size: .8rem; }
+  body.vn-mode .vn-bar .vn-btn span { display: inline; }
+  body.vn-mode .vn-bar .vn-btn::after { left: 8%; right: 8%; }
+  body.vn-mode .vn-bar .vn-btn[aria-pressed="true"]::before { left: .3rem; }
+  body.vn-mode .vn-playtime { font-size: .72rem; padding: .3rem 0; }
+}
+
+/* short landscape phones: tighter buttons so all seven items fit without scrolling */
+@media (min-aspect-ratio: 4/3) and (max-height: 430px) {
+  body.vn-mode .vn-bar { gap: 2px; padding: .2rem; }
+  body.vn-mode .vn-bar .vn-btn { min-height: 34px; }
+}
+
+/* portrait / near-square screens: dock sits under the picture, in the text-box area */
+@media (max-aspect-ratio: 4/3) {
+  body.vn-mode .vn-bar {
+    position: fixed;
+    top: auto;
+    transform: none;
+    left: max(8px, env(safe-area-inset-left, 0px));
+    right: max(8px, env(safe-area-inset-right, 0px));
+    bottom: max(6px, env(safe-area-inset-bottom, 0px));
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    margin: 0;
+  }
+  /* leave room under the text for the dock so the last line is never hidden behind it */
+  body.vn-mode .vn-box:not(.nvl) { padding-bottom: calc(5.2rem + env(safe-area-inset-bottom, 0px)); }
+  body.vn-mode .vn-box.nvl .vn-scroller { max-height: calc(var(--vh, 1vh) * 100 - 9rem); }
+}
+@media (max-width: 700px) and (max-aspect-ratio: 4/3) {
+  body.vn-mode .vn-box:not(.nvl) { height: calc(clamp(190px, 36svh, 320px) + 4.2rem); max-height: 56svh; }
+  body.vn-mode .vn-choices:not(.nvl) { bottom: calc(clamp(190px, 36svh, 320px) + 4.2rem); }
+}

@@ -76,9 +76,12 @@
   left:             0;
   right:            0;
   bottom:           0;
-  background:       radial-gradient(ellipse at 50% 50%, rgba(8, 20, 54, 0.55), rgba(2, 6, 20, 0.88) 80%);
+  background:       radial-gradient(ellipse at 50% 50%, rgba(8, 20, 54, 0.78), rgba(2, 6, 20, 0.94) 80%);
   transition:       opacity 0.2s ease-out;
   cursor:           pointer;
+  z-index:          60; /* above the control dock and story text */
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter:  blur(5px);
 
   /* push the link-logos down a bit */
   padding-top:      0.75em;

@@ -10,6 +10,9 @@ const CHOICES_KEY = "fate.choices.v1"
 const SLOTS_KEY = "fate.slots.v1"
 const BACKUP_KEY = "fate.pre-import-backup.v1"
 const CURRENT_SCENE_KEY = "fate.current-scene.v1"
+const PLAYTIME_KEY = "fate.playtime-ms.v1"
+let playtimeStartedAt = null
+let playtimeTimer = null
 export const SAVE_VERSION = 2
 export const LOG_MAX = 400
 const SETTINGS_COOKIE_KEYS = ["bgm", "voice", "sound", "bgmVersion", "lang", "mature", "h", "readMode", "autoSpeed", "boxOpacity", "landscape", "fontFamily", "fontSize", "keyNext", "keyPrevious", "keyAuto", "keySkip", "keyHide", "keyBacklog"]
@@ -28,6 +31,30 @@ const remove = key => { try { window.localStorage.removeItem(key) } catch (e) {}
 
 export const setCurrentScene = id => { if (id) save(CURRENT_SCENE_KEY, id) }
 export const getCurrentScene = () => load(CURRENT_SCENE_KEY, null)
+
+export const getPlaytime = () => {
+  const stored = Number(load(PLAYTIME_KEY, 0)) || 0
+  return stored + (playtimeStartedAt === null ? 0 : Math.max(0, Date.now() - playtimeStartedAt))
+}
+const persistPlaytime = () => {
+  if (playtimeStartedAt !== null) {
+    const elapsed = getPlaytime()
+    save(PLAYTIME_KEY, elapsed)
+    playtimeStartedAt = Date.now()
+  }
+}
+export const startPlaytime = () => {
+  if (playtimeStartedAt !== null) return
+  playtimeStartedAt = Date.now()
+  playtimeTimer = setInterval(persistPlaytime, 1000)
+}
+export const stopPlaytime = () => {
+  if (playtimeStartedAt === null) return
+  persistPlaytime()
+  playtimeStartedAt = null
+  clearInterval(playtimeTimer)
+  playtimeTimer = null
+}
 
 export const getResume = () => {
   const r = load(RESUME_KEY, null)
@@ -130,13 +157,15 @@ export const getProgressSnapshot = () => ({
   choices: getChoices(),
   settings: getSettings(),
   gameFlags: getGameFlags(),
+  playtimeMs: getPlaytime(),
 })
 export const validateProgressSnapshot = data => !!(
   data && data.app === "fate-stay-night-web-reader" && (data.version === 1 || data.version === SAVE_VERSION) &&
   (data.resume === null || data.resume === undefined || (typeof data.resume.id === "string")) &&
   data.read && typeof data.read === "object" && !Array.isArray(data.read) &&
   Array.isArray(data.backlog) && Array.isArray(data.choices) && data.settings && typeof data.settings === "object" &&
-  (data.gameFlags === undefined || (data.gameFlags && typeof data.gameFlags === "object" && !Array.isArray(data.gameFlags)))
+  (data.gameFlags === undefined || (data.gameFlags && typeof data.gameFlags === "object" && !Array.isArray(data.gameFlags))) &&
+  (data.playtimeMs === undefined || (typeof data.playtimeMs === "number" && isFinite(data.playtimeMs) && data.playtimeMs >= 0))
 )
 export const importProgressSnapshot = data => {
   if (!validateProgressSnapshot(data)) throw new Error("This save file is invalid or uses an unsupported version.")
@@ -145,6 +174,8 @@ export const importProgressSnapshot = data => {
   const ok = save(RESUME_KEY, data.resume || null) && save(READ_KEY, data.read) &&
     save(LOG_KEY, data.backlog.slice(-LOG_MAX)) && save(CHOICES_KEY, data.choices.slice(-500))
   if (!ok) throw new Error("There is not enough browser storage to import this save.")
+  save(PLAYTIME_KEY, Number(data.playtimeMs) || 0)
+  if (playtimeStartedAt !== null) playtimeStartedAt = Date.now()
   readCache = data.read
   if (data.currentScene) setCurrentScene(data.currentScene)
   logCache = data.backlog.slice(-LOG_MAX)

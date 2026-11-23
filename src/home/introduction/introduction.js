@@ -32,9 +32,9 @@ class Introduction extends Component {
       <br/>
       <br/>
       <div className="introduction-dropdown">
-        <div onClick={() => this.updateCookie("howto", !showHowTo)}>
-          How to Use this Site {showHowTo ? "▼" : "▶"}
-        </div>
+        <button type="button" aria-expanded={showHowTo} onClick={() => this.updateCookie("howto", !showHowTo)}>
+          <span>How to Use this Site</span><span className="dropdown-caret" aria-hidden="true">{showHowTo ? "▲" : "▼"}</span>
+        </button>
       </div>
       {showHowTo && <div className="howto-content">
         <br/>
@@ -48,13 +48,13 @@ class Introduction extends Component {
           <b>Using a PC</b><br/>
           • Choose Fate, Unlimited Blade Works, or Heaven's Feel, then select a scene from the route flowchart. The flowchart is also useful for jumping to a specific scene.<br/>
           • Click the reading area or press <kbd>Enter</kbd>, <kbd>Space</kbd>, or <kbd>→</kbd> to advance. Use <kbd>Shift</kbd> + <kbd>Enter</kbd>, <kbd>Shift</kbd> + <kbd>Space</kbd>, or <kbd>←</kbd> to go back.<br/>
-          • Press <kbd>Esc</kbd> to open Settings. In Controls, customize Advance, Go back, Auto, Skip, Hide interface, and Backlog shortcuts. <kbd>Ctrl</kbd> is the default Skip shortcut; change it there if it conflicts with your browser or operating system.<br/>
-          • The control bar provides Back, Auto, Skip, Log (reading history), Hide, Settings, Progress, and Scenes (the scene list). Use Progress to see visited scenes, route availability, tracked affection/ending flags, and manage save slots.<br/>
+          • Press <kbd>Esc</kbd> to open the pause menu, then choose Settings. In Controls, customize Advance, Go back, Auto, Skip, Hide interface, and Backlog shortcuts. <kbd>Ctrl</kbd> is the default Skip shortcut; change it there if it conflicts with your browser or operating system.<br/>
+          • The control dock sits beside the reading area on wide screens and along the bottom on phones. It provides Back, Auto, Skip, Log (reading history), Hide, and Pause. The pause menu contains Resume, Settings, and Exit to Main Menu. Playtime is displayed alongside the controls.<br/>
         </div> : <div className="howto-device-panel">
           <b>Using a phone or tablet</b><br/>
           • Choose a route and tap a scene in its flowchart. Tap the reading area to advance through the text and use on-screen choices to continue at branch points.<br/>
-          • Tap the tick control in the top-left corner to open Settings. The Controls tab lists the available keyboard shortcuts; physical keyboards can use the same bindings.<br/>
-          • Use the on-screen control bar for Back, Auto, Skip, Log (reading history), Hide, Settings, Progress, and Scenes (the scene list). On narrow screens, the controls may wrap or become icon-only to keep touch targets separate.<br/>
+          • Tap the tick control in the top-left corner to open Settings. The Pause control opens Resume, Settings, and Exit to Main Menu. The Controls tab lists the available keyboard shortcuts; physical keyboards can use the same bindings.<br/>
+          • Use the on-screen control dock for Back, Auto, Skip, Log (reading history), Hide, and Pause. Playtime is displayed with the controls; on portrait screens the dock moves to the bottom.<br/>
           • In Reading settings, adjust font family, font size, text-box opacity, and reading mode. Force landscape can provide a wider reading layout where your device/browser supports it.<br/>
         </div>}
         <br/>
@@ -75,9 +75,9 @@ class Introduction extends Component {
       </div>}
       <br/>
       <div className="introduction-dropdown">
-        <div onClick={() => this.updateCookie("thanks", !showThanks)}>
-          Acknowledgements {showThanks ? "▼" : "▶"}
-        </div>
+        <button type="button" aria-expanded={showThanks} onClick={() => this.updateCookie("thanks", !showThanks)}>
+          <span>Acknowledgements</span><span className="dropdown-caret" aria-hidden="true">{showThanks ? "▲" : "▼"}</span>
+        </button>
       </div>
       <br/>
       {showThanks && <div>
@@ -116,8 +116,6 @@ class Introduction extends Component {
         </div>
         <br/>
       </div>}
-      <br/>
-      <div className="introduction-hr"/>
     </div>
   }
 }

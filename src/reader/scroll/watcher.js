@@ -481,16 +481,16 @@ class ScrollWatcher extends Component {
     if (!this.mounted || !auto || !shown || (atEnd && !this.props.hasNext) || !this.props.isOnTop || visible.id === 0) {
       return
     }
-    const box = this.props.boxRef && this.props.boxRef.current
-    const section = this.sections[visible.id]
-    const node = section && section.ref.current
-    const chars = node ? node.textContent.trim().length : 0
-    const pages = box ? Math.max(1, Math.ceil(box.scrollHeight / Math.max(box.clientHeight, 1))) : 1
+    // Base the wait on the page currently on screen rather than the whole source section.
+    // The previous whole-section estimate routinely hit its 12s cap on long scenes.
+    const currentText = this.pageText()
     const speed = {slow: 1.6, normal: 1, fast: 0.55}[this.props.options.autoSpeed] || 1
-    const delay = Math.min(12000, Math.max(1200, (900 + 55 * (chars / pages)) * speed))
+    const delay = Math.min(7000, Math.max(900, (700 + 32 * currentText.length) * speed))
     this.autoTimer = setTimeout(() => {
+      // A menu or backlog may have opened after this timer was queued.
+      if (!this.mounted || !this.state.auto || !this.props.isOnTop || this.state.loading) return
       this.vnAdvance(1, true)
-      // a page turn within a section changes no state, so queue the next one here
+      // Page turns within one section do not change React state, so queue the next page explicitly.
       this.scheduleAuto()
     }, delay)
   }

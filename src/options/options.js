@@ -59,6 +59,8 @@ class Options extends Component {
 
     this.state = {
       showMenu: false,
+      showPause: false,
+      returnToPause: false,
       showLog: false,
       canAutoplay: false,
       debugLevel: parseInt(debug[1], 10) || 0,
@@ -116,15 +118,25 @@ class Options extends Component {
       }
       return
     }
-    if (e.keyCode === 27) { // escape
+    if (e.keyCode === 27) { // Escape opens/closes the in-reader pause panel.
+      const path = window.location.pathname.replace(/\/$/, "")
+      const isLandingOrProject = !path || path === "/project" || /^\/(fate|ubw|hf|saber|rin|sakura|prologue|凛|桜|プロローグ)$/.test(path)
       setTimeout(() => {
         if (this.state.showMenu) {
-          this.setState({canAutoplay: true})
+          this.setState({
+            showMenu: false,
+            showPause: this.state.returnToPause,
+            returnToPause: false,
+            canAutoplay: true,
+            options: getOptions(this.state),
+          })
+        } else if (this.state.showPause) {
+          this.setState({showPause: false})
+        } else if (!isLandingOrProject) {
+          this.setState({showPause: true, canAutoplay: true})
+        } else {
+          this.setState({showMenu: true, canAutoplay: true, options: getOptions(this.state)})
         }
-        this.setState({
-          showMenu: !this.state.showMenu,
-          options: getOptions(this.state),
-        })
       }, 1)
     } else if (e.keyCode === 13) { // enter
       setTimeout(() => {
@@ -185,13 +197,26 @@ class Options extends Component {
       canAutoplay: this.state.canAutoplay,
       setAutoplay: this.setAutoplay,
       showLog: this.state.showLog,
-      openMenu: () => this.setState({showMenu: true, canAutoplay: true}),
-      openLog: () => this.setState({showLog: true, showMenu: false, canAutoplay: true}),
+      showPause: this.state.showPause,
+      openPause: () => this.setState({showPause: true, canAutoplay: true}),
+      resumeReading: () => this.setState({showPause: false, canAutoplay: true}),
+      openMenu: () => this.setState({showMenu: true, showPause: false, returnToPause: this.state.showPause, canAutoplay: true}),
+      openLog: () => this.setState({showLog: true, showMenu: false, showPause: false, canAutoplay: true}),
       tick: <Tick onClick={() => this.setState({showMenu: true, canAutoplay: true})}/>,
     })}>
       {this.props.children}
 
       <MobileGuard/>
+
+      {this.state.showPause && <div className="pause-screen" role="dialog" aria-modal="true" aria-label="Paused">
+        <div className="pause-panel">
+          <div className="pause-time">PAUSED</div>
+          <button type="button" onClick={() => this.setState({showPause: false, canAutoplay: true})}><span>↶</span> Resume</button>
+          <button type="button" onClick={() => this.setState({showPause: false, showMenu: true, returnToPause: true})}><span>☼</span> Settings</button>
+          <button type="button" className="pause-exit" onClick={() => { window.location.assign("/") }}><span>↩</span> Exit to Main Menu</button>
+          <p>Press Esc to resume</p>
+        </div>
+      </div>}
 
       <Backlog visible={this.state.showLog}
                lang={this.state.lang}
@@ -203,6 +228,8 @@ class Options extends Component {
         // the setTimeout here is a terrible hack, it avoids timing issues since we currently have multiple listeners for the same key
             onClose={() => setTimeout(() => this.setState({
               showMenu: false,
+              showPause: this.state.returnToPause,
+              returnToPause: false,
               canAutoplay: true,
               options: getOptions(this.state),
             }), 1)}

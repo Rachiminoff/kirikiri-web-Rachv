@@ -1,12 +1,11 @@
 import React, {Component} from "react"
 import {withRouter} from "react-router"
 import ScriptLoader from "../interpreter/script-loader"
-import Links from "../home/links/links"
 import {scripts} from "../resources/generated/scene-index"
 import {IDToPath, PathToID} from "../resources/lookup"
-import {isRead, setCurrentScene} from "../progress/progress"
+import {isRead, setCurrentScene, startPlaytime, stopPlaytime} from "../progress/progress"
 import {enterGameScene} from "../progress/game-state"
-import {RouteOfScene, SceneTitle} from "../resources/titles"
+import {SceneTitle} from "../resources/titles"
 import Animation from "./animation/animation"
 import Choice from "./choice/choice"
 import Controls from "./controls/controls"
@@ -32,11 +31,16 @@ class Reader extends Component {
   }
 
   componentDidMount() {
+    startPlaytime()
     // a scene that follows another one in the reader announces itself (see SceneToast)
     enterGameScene(this.sceneID())
     setCurrentScene(this.sceneID())
     const previous = enterScene(this.sceneID())
     this.setState({progressionReady: true, changedTo: previous && previous !== this.sceneID() ? this.sceneID() : undefined})
+  }
+
+  componentWillUnmount() {
+    stopPlaytime()
   }
 
   componentDidUpdate(prevProps) {
@@ -84,8 +88,8 @@ class Reader extends Component {
                      sceneID={sceneID}
                      hasNext={hasNext}
                      onEnd={this.onEnd}
-                     isOnTop={!options.showMenu && !options.showLog && options.canAutoplay}>
-        <Animation freezeFrame={!options.canAutoplay}/>
+                     isOnTop={!options.showMenu && !options.showLog && !options.showPause && options.canAutoplay}>
+        <Animation freezeFrame={!options.canAutoplay || options.showPause}/>
 
         {vn ?
           <>
@@ -103,7 +107,6 @@ class Reader extends Component {
               </div>
               <VnNext nextRef={this.nextRef} more={hasNext}/>
               <VnLoading/>
-              <Controls scenesTo={"/" + RouteOfScene(sceneID)} sceneID={sceneID} lang={options.lang}/>
             </VnBox>
           </> :
           <div className="text-area" hide={!options.canAutoplay ? "" : undefined}>
@@ -115,10 +118,11 @@ class Reader extends Component {
           </div>
         }
 
+        <Controls/>
+
         <div className="click-to-start resizable-text"
              hide={options.canAutoplay ? "" : undefined}
              onClick={options.setAutoplay}>
-          <Links/>
           <div>
             <div>Click to start</div>
             Press &lt;ESC&gt; to adjust settings

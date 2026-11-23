@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react"
-import {useHistory, useLocation} from "react-router-dom"
 import {isMobileDevice} from "../mobile/mobile"
 import {getProgressSummary, getSlots, saveSlot, loadSlot, clearSlot, getProgressSnapshot, importProgressSnapshot, getCurrentScene} from "../../progress/progress"
 import {SceneTitle} from "../../resources/titles"
@@ -73,44 +72,12 @@ const TABS = [
   {id: "progress", label: "Progress"},
 ]
 
-// one button per route; each opens the scene list on that route
-const ROUTES = [
-  {id: "fate", label: "Fate", sub: "Saber"},
-  {id: "ubw", label: "Unlimited Blade Works", sub: "Rin"},
-  {id: "hf", label: "Heaven's Feel", sub: "Sakura"},
-]
-
-const RouteButtons = ({onGo}) => {
-  const location = useLocation()
-  const here = (/^\/(fate|saber|セイバ|ubw|rin|凛|hf|sakura|桜)?\/?$/.exec(location.pathname) || [])[1]
-  const current = {fate: "fate", saber: "fate", "セイバ": "fate", ubw: "ubw", rin: "ubw", "凛": "ubw", hf: "hf", sakura: "hf", "桜": "hf"}[here]
-    || (/^\/?$/.test(location.pathname) ? "fate" : undefined)
-  return <div className="menu-routes" role="group" aria-label="Routes">
-    <div className="menu-routes-title">Routes</div>
-    {ROUTES.map(route => (
-      <button key={route.id}
-              type="button"
-              className={"menu-route" + (current === route.id && /^\/[^/]*$/.test(location.pathname) ? " is-here" : "")}
-              data-route={route.id}
-              onClick={() => onGo(route.id)}>
-        <span className="menu-route-name">{route.label}</span>
-        <small>{route.sub}</small>
-      </button>
-    ))}
-  </div>
-}
-
 const Menu = props => {
   const [tab, setTab] = useState(0)
   const [slotRefresh, setSlotRefresh] = useState(0)
   const [saveMessage, setSaveMessage] = useState("")
   const [keyWarning, setKeyWarning] = useState("")
   const importRef = React.useRef(null)
-  const history = useHistory()
-  const goRoute = id => {
-    history.push("/" + id)
-    props.onClose()
-  }
   const set = key => value => props.setSaveState({[key]: value})
   const bindingKeys = ["keyNext", "keyPrevious", "keyAuto", "keySkip", "keyHide", "keyBacklog"]
   const updateBinding = (key, value) => {
@@ -302,7 +269,6 @@ const Menu = props => {
           </li>
         ))}
       </ul>
-      <RouteButtons onGo={goRoute}/>
       <button type="button" className="menu-item" onClick={props.openLog}>Backlog</button>
       <button type="button" className="menu-item menu-back" onClick={props.onClose}>Back</button>
     </nav>
