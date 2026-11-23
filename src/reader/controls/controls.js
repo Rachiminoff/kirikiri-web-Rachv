@@ -43,6 +43,9 @@ class Playtime extends Component {
 const Controls = props => {
   const {actions = {}, auto, skip} = props.vn || {}
   const options = props.options || {}
+  if (options.showMenu || options.showPause || options.showLog) {
+    return null
+  }
   return <>
     <div className="vn-bar" role="toolbar" aria-label="Reading controls">
       <Playtime/>
