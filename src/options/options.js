@@ -75,7 +75,7 @@ class Options extends Component {
       // "vn" = the same, but in a textbox along the bottom, "scroll" = original scrolling page
       readMode: ["vn", "scroll"].includes(readMode[1]) ? readMode[1] : "nvl",
       autoSpeed: ["slow", "fast"].includes(autoSpeed[1]) ? autoSpeed[1] : "normal",
-      landscape: !(landscape[1] === "false"), // phones: ask for fullscreen + landscape while reading
+      landscape: !(landscape[1] === "false"), // phones: force landscape everywhere (fullscreen + orientation lock, or a rotate prompt)
       boxOpacity: boxOpacity[1] ? Math.min(100, Math.max(20, parseInt(boxOpacity[1], 10) || 80)) : 80,
       fontFamily: (() => { try { return fontFamily[1] ? decodeURIComponent(fontFamily[1]) : "FateLine" } catch (e) { return "FateLine" } })(),
       fontSize: fontSize[1] ? Math.min(150, Math.max(80, parseInt(fontSize[1], 10) || 100)) : 100,
@@ -198,6 +198,7 @@ class Options extends Component {
       setAutoplay: this.setAutoplay,
       showLog: this.state.showLog,
       showPause: this.state.showPause,
+      setLandscape: value => this.setSaveState({landscape: value}),
       openPause: () => this.setState({showPause: true, canAutoplay: true}),
       resumeReading: () => this.setState({showPause: false, canAutoplay: true}),
       openMenu: () => this.setState({showMenu: true, showPause: false, returnToPause: this.state.showPause, canAutoplay: true}),

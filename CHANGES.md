@@ -19,3 +19,8 @@ The previous Auto timer calculated its delay from the full text section divided 
 - The quick control bar retains the actions that already existed there (Back, Auto, Skip, Log, Hide, Settings). Save/Load remain in Settings → Progress, where the existing slot-based and import/export workflows live; I did not invent a default save slot for one-tap Save/Load buttons.
 - Continue is shown only when the saved resume record points to a known scene. Start/Select Route reveals the three route choices; selecting one opens that route's existing flowchart.
 - Settings → Progress still displays route progress. Only the route-choice buttons were removed from Settings.
+
+## Force landscape on phones
+- `public/manifest.json` — added `"orientation": "landscape"` so the installed web app opens locked to landscape (Android).
+- `src/options/mobile/mobile-guard.js` — the landscape lock / rotate prompt now applies on every screen (home included), tries the lock immediately, and no longer offers "Continue in portrait"; the prompt's only escape is "Turn off landscape lock" (also in Settings → Reading).
+- `src/options/options.js` — exposes `setLandscape` to the guard.

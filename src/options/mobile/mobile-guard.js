@@ -1,19 +1,17 @@
 import React, {useEffect, useMemo, useRef, useState} from "react"
-import {withRouter} from "react-router-dom"
 import {withOptions} from "../../reader/debug"
-import {HOME_PATH, isFullscreen, isMobileDevice, isPortrait, lockLandscape, unlockOrientation} from "./mobile"
+import {isFullscreen, isMobileDevice, isPortrait, lockLandscape, tryLockLandscape, unlockOrientation} from "./mobile"
 import "./mobile.css"
 
-// On phones, while reading: ask for fullscreen + landscape on the first tap, and where the browser won't allow it
-// (iPhone Safari) cover a portrait screen with a "rotate your device" prompt.
-const MobileGuard = ({options, location}) => {
+// On phones (everywhere in the app, not just while reading): lock to landscape where the browser allows it
+// (installed web app, or fullscreen on Android Chrome after the first tap), and where it doesn't (iPhone Safari,
+// plain browser tabs) cover a portrait screen with a "rotate your device" prompt.
+const MobileGuard = ({options}) => {
   const mobile = useMemo(isMobileDevice, [])
   const [portrait, setPortrait] = useState(isPortrait())
-  const [dismissed, setDismissed] = useState(false)
   const tried = useRef(false)
 
-  const reading = !HOME_PATH.test(location.pathname)
-  const active = mobile && options.landscape && reading
+  const active = mobile && options.landscape
 
   useEffect(() => {
     if (!window.matchMedia) {
@@ -29,12 +27,14 @@ const MobileGuard = ({options, location}) => {
   useEffect(() => {
     if (!active) {
       tried.current = false
-      if (mobile && reading) {
+      if (mobile) {
         unlockOrientation()
       }
       return undefined
     }
-    // browsers only allow fullscreen / orientation lock from inside a tap, so wait for the first one
+    // installed web apps (and some browsers) allow the lock without a gesture, so try straight away
+    tryLockLandscape()
+    // otherwise browsers only allow fullscreen / orientation lock from inside a tap, so use the first one
     const onTap = () => {
       if (!tried.current && !isFullscreen()) {
         tried.current = true
@@ -43,16 +43,9 @@ const MobileGuard = ({options, location}) => {
     }
     document.addEventListener("pointerup", onTap)
     return () => document.removeEventListener("pointerup", onTap)
-  }, [active, mobile, reading])
+  }, [active, mobile])
 
-  useEffect(() => {
-    // the scene list is happier in portrait, so let go of the lock there
-    if (mobile && !reading) {
-      unlockOrientation()
-    }
-  }, [mobile, reading])
-
-  if (!active || !portrait || dismissed) {
+  if (!active || !portrait) {
     return null
   }
 
@@ -63,11 +56,11 @@ const MobileGuard = ({options, location}) => {
       <path d="M12 50c6 6 14 8 22 6M34 56l-5-1M34 56l1-5"/>
     </svg>
     <div className="rotate-prompt-title">Rotate your device</div>
-    <div className="rotate-prompt-text">This story reads best in landscape.</div>
-    <button type="button" className="rotate-prompt-skip" onClick={() => setDismissed(true)}>
-      Continue in portrait
+    <div className="rotate-prompt-text">This story is best viewed in landscape.</div>
+    <button type="button" className="rotate-prompt-skip" onClick={() => options.setLandscape && options.setLandscape(false)}>
+      Turn off landscape lock
     </button>
   </div>
 }
 
-export default withRouter(withOptions(MobileGuard))
+export default withOptions(MobileGuard)

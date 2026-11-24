@@ -166,7 +166,7 @@ const Menu = props => {
                    options={[{label: "NVL", value: "nvl"}, {label: "Textbox", value: "vn"}, {label: "Scrolling", value: "scroll"}]}/>
       </Row>
       {isMobileDevice() &&
-      <Row label="Force landscape" hint="Fullscreen + rotate prompt while reading">
+      <Row label="Force landscape" hint="Fullscreen + rotate prompt on phones">
         <Segmented name="landscape" label="Force landscape" value={props.landscape} onChange={set("landscape")}
                    options={[{label: "On", value: true}, {label: "Off", value: false}]}/>
       </Row>}

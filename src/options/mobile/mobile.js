@@ -55,6 +55,20 @@ export const lockLandscape = async () => {
   }
 }
 
+// no-gesture attempt: succeeds in installed web apps / already-fullscreen pages, silently fails elsewhere
+export const tryLockLandscape = () => {
+  try {
+    if (window.screen.orientation && window.screen.orientation.lock) {
+      const result = window.screen.orientation.lock("landscape")
+      if (result && result.catch) {
+        result.catch(() => {})
+      }
+    }
+  } catch (e) {
+    // unsupported
+  }
+}
+
 export const unlockOrientation = () => {
   try {
     if (window.screen.orientation && window.screen.orientation.unlock) {
