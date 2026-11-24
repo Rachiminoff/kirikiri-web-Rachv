@@ -79,6 +79,11 @@ export const enterGameScene = sceneID => {
     window.sessionStorage.setItem(ENTRY_KEY, sceneID)
   } catch (e) { applySceneUpdates(sceneID) }
 }
+// Pretend `sceneID` has already been entered, so arriving on it does not apply its flag updates a second time
+// (used when stepping back to a scene whose flags were just restored).
+export const markSceneEntered = sceneID => {
+  try { window.sessionStorage.setItem(ENTRY_KEY, sceneID) } catch (e) {}
+}
 export const clearEntryMarker = () => {
   try { window.sessionStorage.removeItem(ENTRY_KEY) } catch (e) {}
 }

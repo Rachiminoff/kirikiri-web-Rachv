@@ -25,7 +25,6 @@ let Home = props => {
   useEffect(() => { leaveReader() }, [])
 
   return <div className={"title-screen" + (routeSelected ? " route-active" : "")}>
-    {props.options.tick}
     {!routeSelected && <Background/>}
     {!routeSelected && <div className="title-screen-shade" aria-hidden="true"/>}
     {!routeSelected && <main className="title-screen-content">

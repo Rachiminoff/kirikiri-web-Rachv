@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import {isMobileDevice} from "../mobile/mobile"
 import {getProgressSummary, getSlots, saveSlot, loadSlot, clearSlot, getProgressSnapshot, importProgressSnapshot, getCurrentScene} from "../../progress/progress"
 import {SceneTitle} from "../../resources/titles"
+import Guide from "../guide/guide"
 import "./menu.css"
 
 // a group of mutually exclusive choices, shown as a row of words; the chosen one lights up
@@ -70,6 +71,7 @@ const TABS = [
   {id: "content", label: "Content"},
   {id: "controls", label: "Controls"},
   {id: "progress", label: "Progress"},
+  {id: "guide", label: "Guide"},
 ]
 
 const Menu = props => {
@@ -246,6 +248,7 @@ const Menu = props => {
       </div>
       {saveMessage && <p className="menu-save-message" role="status">{saveMessage}</p>}
     </>,
+    guide: <Guide/>,
   }[TABS[tab].id]
 
   return <div className="menu resizable-text"
@@ -273,7 +276,7 @@ const Menu = props => {
       <button type="button" className="menu-item menu-back" onClick={props.onClose}>Back</button>
     </nav>
 
-    <main className="menu-page">
+    <main className={"menu-page" + (TABS[tab].id === "guide" ? " is-guide" : "")}>
       <header className="menu-page-head">
         <span className="menu-count">{tab + 1}/{TABS.length}</span>
         <h3>{TABS[tab].label}</h3>

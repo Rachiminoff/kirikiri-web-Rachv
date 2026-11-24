@@ -43,9 +43,8 @@ class Playtime extends Component {
 const Controls = props => {
   const {actions = {}, auto, skip} = props.vn || {}
   const options = props.options || {}
-  if (options.showMenu || options.showPause || options.showLog) {
-    return null
-  }
+  // the dock belongs to the reader; it must not show through the settings menu
+  if (options.showMenu) return null
   return <>
     <div className="vn-bar" role="toolbar" aria-label="Reading controls">
       <Playtime/>

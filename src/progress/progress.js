@@ -119,12 +119,20 @@ export const subscribeLog = listener => {
 
 // Record the player's explicit branch selection. This is a history of choices, not a simulation of the original VN's
 // hidden affection/route flags; the source reader still follows its currently supported graph logic.
+// The flags as they stood when the choice was made are kept with it, so the choice can be taken back later.
 export const recordChoice = (from, to, label) => {
   const choices = load(CHOICES_KEY, []) || []
-  choices.push({from, to, label: label || "", ts: Date.now()})
+  choices.push({from, to, label: label || "", ts: Date.now(), flags: getGameFlags()})
   save(CHOICES_KEY, choices.slice(-500))
 }
 export const getChoices = () => load(CHOICES_KEY, []) || []
+// Take the most recent choice back: it leaves the history and its flag snapshot is returned.
+export const popChoice = () => {
+  const choices = getChoices()
+  const last = choices.pop()
+  if (last) save(CHOICES_KEY, choices)
+  return last || null
+}
 
 const readCookie = name => {
   if (typeof document === "undefined") return ""
